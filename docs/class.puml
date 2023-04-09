@@ -1,0 +1,145 @@
+@startuml
+skinparam style strictuml
+
+"<<interface>>\nGui"  <- GameEngine
+
+interface "<<interface>>\nGui" {
++drawState(State)
++drawInventory(items)
+}
+
+ConsoleGui -|> "<<interface>>\nGui"
+class ConsoleGui {
+}
+
+class CommandsHandler {
++getCommand()
+}
+
+class GameEngine {
+'-inventoryMenuOpened
++run()
+}
+
+
+GameEngine --> "<<interface>>\nController"
+GameEngine -> CommandsHandler
+GameEngine --> State
+
+
+abstract class GameObject {
++getIcon()
++getName()
+}
+
+GameObject <|-- Actor
+GameObject <|-- Item
+abstract class Item {
+}
+
+
+
+State --> Item
+Item <|-- Weapon
+class Weapon {
+}
+
+'abstract class GameObject {
+'}
+
+'GameObject <|-- Actor
+abstract class Actor {
+-attack
+-health
+-inventory
++getAttack()
++applyDamage(integer)
+}
+
+
+'"<<interface>>\nController"
+interface "<<interface>>\nController" {
++updateState(State)
+}
+
+"<<interface>>\nController" <|.. EnemyController
+EnemyController ..> State
+EnemyController ---> Enemy
+EnemyController ...> Destination
+class EnemyController {
+}
+
+"<<interface>>\nController" <|.. WorldController
+WorldController ..> State
+'WorldController ..> Item
+class WorldController {
+}
+
+"<<interface>>\nController" <|.. PlayerController
+PlayerController ..> State
+PlayerController --> Actor
+class PlayerController {
+}
+CommandsHandler <- PlayerController
+
+
+GameEngine --> InventoryMenu
+InventoryMenu --> Actor
+InventoryMenu --> CommandsHandler
+InventoryMenu --> "<<interface>>\nGui"
+ConsoleGui ---> GameObject
+class InventoryMenu {
+}
+
+State --> Actor
+
+Actor <|-- Player
+class Player {
+}
+
+Item <. Actor
+
+Actor <|-- Enemy
+abstract class Enemy {
++move(currentPosition, playerPosition)
+}
+
+Enemy ..> Destination
+class Destination {
++coordinateX
++coordinateY
+}
+
+Enemy <|-- Ghost
+class Ghost {
+}
+
+class State {
+-map
+}
+
+
+class AssetManager {
+}
+
+WorldController --> ItemGenerator
+WorldController --> EnemyGenerator
+WorldController --> MapGenerator
+MapGenerator --> AssetManager
+
+class ItemGenerator {
++generateItems()
+}
+'ItemGenerator ..> Item
+ItemGenerator --> AssetManager
+
+class EnemyGenerator {
++generateEnemies()
+}
+'EnemyGenerator ..> Enemy
+EnemyGenerator --> AssetManager
+class MapGenerator {
++generateRoom()
+}
+
+@enduml
