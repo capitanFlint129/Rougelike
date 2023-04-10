@@ -1,5 +1,4 @@
 @startuml
-
 skin rose
 
 title RogueLike Game - Component Diagram
@@ -8,34 +7,29 @@ Define components
 '/
 [Game\nEngine] as GE
 [State] as State
-[AI component] as AI
+[EntityManager] as EM
 [Asset manager] as AM
 package "Level generation" {
-  [MapGeneration] as MG
-  [ObjectGeneration] as OG
+  [MapGenerator] as MG
+  [ObjectGenerator] as OG
+  [ItemGenerator] AS IG
 }
-[EntityManager] as EM
-[PlayerController] as PC
-interface "GUI" as GUI
-[CombatSystem] as CS
+[WorldController] as WC
 /'
 ===================================
 '/
-
-
-GUI <-- GE
+EnentHandler <-- GE
+Controller <-- EM
+Controller <- GE
+GE -> GUI
 GE --> State
-GE --> CS
-GE -> PC
-State --> AI
-EM <- State
-State --> MG
+EM <- State 
 
-PC -> AM
-PC -> EM
-CS --> EM
- 
+State --> WC
+WC --> MG 
 MG --> AM
-MG <- OG
-
+OG --> AM
+IG --> AM
+OG <- MG
+MG -> IG
 @enduml
