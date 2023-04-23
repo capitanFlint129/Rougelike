@@ -1,7 +1,7 @@
 class State:
     def __init__(self):
         self.rows_number = 26
-        self.level= [list() for i in range(self.rows_number)]
+        self.level = [list() for i in range(self.rows_number)]
         self.enemies = []
         self.hero = None
         self.enemy_x = 65
@@ -14,6 +14,5 @@ class State:
         self.last_y = 3
         self.lives = 5
         self.score = 0
-        self.loop = True
-        self.saved_variables = []
         self.level_changed = False
+        self.current_level = 1
