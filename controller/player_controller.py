@@ -1,5 +1,4 @@
 from controller.controller import Controller
-from controller.world_controller import new_level
 from gui.command_handler import CommandHandler, UserCommand
 from state.state import State
 
@@ -28,7 +27,6 @@ class PlayerController(Controller):
             if next_cell in ["^", ">", "v", "<"]:
                 game_state.score = 0
                 game_state.lives -= 1
-                new_level(game_state)
             if next_cell == "c":
                 game_state.score += 1
                 game_state.level[next_y][next_x] = ''

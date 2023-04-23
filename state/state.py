@@ -1,9 +1,12 @@
+from state.hero import Hero
+
+
 class State:
-    def __init__(self):
+    def __init__(self, hero: Hero):
         self.rows_number = 26
-        self.level = [list() for i in range(self.rows_number)]
+        self.level = []
         self.enemies = []
-        self.hero = None
+        self.hero = hero
         self.enemy_x = 65
         self.enemy_y = 20
         self.e_last_x = self.enemy_x
