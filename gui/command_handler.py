@@ -13,13 +13,13 @@ class UserCommand(Enum):
 class CommandHandler:
     @staticmethod
     def get_command() -> UserCommand:
-        if keyboard.is_pressed('w'):
+        if keyboard.is_pressed("w"):
             return UserCommand.UP
-        elif keyboard.is_pressed('s'):
+        elif keyboard.is_pressed("s"):
             return UserCommand.DOWN
-        elif keyboard.is_pressed('a'):
+        elif keyboard.is_pressed("a"):
             return UserCommand.LEFT
-        elif keyboard.is_pressed('d'):
+        elif keyboard.is_pressed("d"):
             return UserCommand.RIGHT
         else:
             pass

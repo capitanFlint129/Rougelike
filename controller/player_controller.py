@@ -21,7 +21,7 @@ class PlayerController(Controller):
             next_y, next_x = game_state.player_y, game_state.player_x - 1
 
         next_cell = game_state.level[next_y][next_x]
-        if not next_cell == '#':
+        if not next_cell == "#":
             game_state.player_y = next_y
             game_state.player_x = next_x
             if next_cell in ["^", ">", "v", "<"]:
@@ -29,7 +29,7 @@ class PlayerController(Controller):
                 game_state.lives -= 1
             if next_cell == "c":
                 game_state.score += 1
-                game_state.level[next_y][next_x] = ''
+                game_state.level[next_y][next_x] = ""
             if next_cell == "H":
                 game_state.lives += 1
-                game_state.level[next_y][next_x] = ''
+                game_state.level[next_y][next_x] = ""
