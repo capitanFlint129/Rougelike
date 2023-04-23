@@ -8,8 +8,9 @@ class Actor(GameObject, ABC):
     def __init__(self):
         self.inventory: [Item] = []
         self.equipped: [Item] = []
-        self.health = 0
-        self.power = 0
+        self.health = 10
+        self.power = 1
+        self.is_alive = True
 
     def attack(self, actor: "Actor"):
         power = self.power + sum([item.attack_bonus() for item in self.equipped])
@@ -25,3 +26,8 @@ class Actor(GameObject, ABC):
         armor = sum([item.armor_bonus() for item in self.equipped])
         damage = max(0, damage - armor)
         self.health = max(0, self.health - damage)
+        if self.health == 0:
+            self.is_alive = False
+
+    def __str__(self):
+        return self.get_icon()

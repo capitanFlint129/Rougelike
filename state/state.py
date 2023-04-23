@@ -6,11 +6,8 @@ class State:
         self.rows_number = 26
         self.level = []
         self.enemies = []
+        self.exits_coordinates = []
         self.hero = hero
-        self.enemy_x = 65
-        self.enemy_y = 20
-        self.e_last_x = self.enemy_x
-        self.e_last_y = self.enemy_y
         self.player_x = 6
         self.player_y = 3
         self.last_x = 6
