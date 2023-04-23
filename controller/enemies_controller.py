@@ -1,7 +1,7 @@
 from state.state import State
 
 
-class EnemyController:
+class EnemiesController:
     def update_state(self, game_state: State):
         e_move_up = True
         e_move_down = True
