@@ -1,27 +1,13 @@
-from state.state import State
+from controller.controller import Controller
+from controller.world_controller import new_level
 from gui.command_handler import CommandHandler, UserCommand
-
-def clear_level(game_state):
-    for row in game_state.level:
-        row.clear()
-def new_level(game_state):
-    game_state.level_changed = True
-    game_state.enemy_x = 60
-    game_state.enemy_y = 17
-    game_state.player_x = 6
-    game_state.player_y = 3
-    clear_level(game_state)
-    with open(f'levels/level_{game_state.current_level}.txt', 'r') as levels_file:
-        game_state.level = [list(line.strip()) for line in levels_file.readlines()]
-
-    game_state.level.append(["  Score: ", ""])
-    game_state.level.append(["  Lives: ", ""])
-
-    # door
-    game_state.level[20][60] = '+'
+from state.state import State
 
 
-class PlayerController:
+
+
+
+class PlayerController(Controller):
     def __init__(self, command_handler: CommandHandler):
         self.command_handler = command_handler
 
