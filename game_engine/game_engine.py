@@ -49,7 +49,7 @@ class GameEngine:
                     echo(term.move_yx(y, x) + enemy.get_icon(), end="")
 
                 echo(term.move_yx(24, 10) + str(self.state.score), end="")
-                echo(term.move_yx(25, 10) + str(self.state.lives), end="")
+                echo(term.move_yx(25, 10) + str(self.state.hero.health), end="")
 
                 time.sleep(0.1)
 

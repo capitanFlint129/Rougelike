@@ -3,6 +3,10 @@ from state.item import Item
 
 
 class Enemy(Actor):
+    # def __init__(self):
+    #     super().__init__()
+    #     self.power = 10
+
     def get_icon(self):
         return "*"
 

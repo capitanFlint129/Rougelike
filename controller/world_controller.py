@@ -1,5 +1,3 @@
-import time
-
 from controller.controller import Controller
 from state.enemy import Enemy
 from state.state import State
@@ -7,18 +5,8 @@ from state.state import State
 
 class WorldController(Controller):
     def update_state(self, game_state: State):
-        if game_state.lives == 0:
-            time.sleep(1)
-            play_again = input("press enter to replay")
-            if play_again == "":
-                game_state.current_level = 0
-                game_state.score = 0
-                game_state.lives = 5
-                self.new_level(game_state)
-            else:
-                time.sleep(1)
-                time.sleep(1)
-                exit()
+        if not game_state.hero.is_alive:
+            exit()
             self.new_level(game_state)
         if (game_state.player_y, game_state.player_x) in game_state.exits_coordinates:
             game_state.current_level += 1

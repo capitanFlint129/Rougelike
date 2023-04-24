@@ -26,9 +26,10 @@ class EnemiesController(Controller):
             if isinstance(next_cell, Hero):
                 game_state.hero.attack(next_cell)
             elif next_cell not in ["#", "^", ">", "<", "v"]:
+                if (enemy_y, enemy_x) != (next_y, next_x):
+                    previous_item = game_state.level[next_y][next_x]
                 enemy_y = next_y
                 enemy_x = next_x
-            previous_item = game_state.level[enemy_y][enemy_x]
             game_state.level[enemy_y][enemy_x] = enemy
             new_enemies.append((enemy_y, enemy_x, enemy, previous_item))
         game_state.enemies = new_enemies
