@@ -28,6 +28,3 @@ class Actor(GameObject, ABC):
         self.health = max(0, self.health - damage)
         if self.health == 0:
             self.is_alive = False
-
-    def __str__(self):
-        return self.get_icon()

@@ -13,10 +13,10 @@ echo("")
 
 class GameEngine:
     def __init__(
-            self,
-            state: State,
-            controllers: [Controller],
-            command_handler: CommandHandler,
+        self,
+        state: State,
+        controllers: [Controller],
+        command_handler: CommandHandler,
     ):
         self.state = state
         self.controllers = controllers
@@ -29,7 +29,8 @@ class GameEngine:
                     echo(term.home + term.clear)
                     self._echo_level(self.state)
                     echo(
-                        term.move_yx(self.state.player_y, self.state.player_x) + self.state.hero.get_icon(),
+                        term.move_yx(self.state.player_y, self.state.player_x)
+                        + self.state.hero.get_icon(),
                         end="",
                     )
                     self.state.level_changed = False
@@ -41,7 +42,11 @@ class GameEngine:
                 self._apply_controllers()
 
                 echo(term.move_yx(old_player_y, old_player_x) + " ", end="")
-                echo(term.move_yx(self.state.player_y, self.state.player_x) + self.state.hero.get_icon(), end="")
+                echo(
+                    term.move_yx(self.state.player_y, self.state.player_x)
+                    + self.state.hero.get_icon(),
+                    end="",
+                )
 
                 for y, x in old_enemy_coordinates:
                     echo(term.move_yx(y, x) + str(self.state.level[y][x]), end="")
