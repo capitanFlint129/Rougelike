@@ -25,7 +25,7 @@ class Room:
         self.right = None
         self.top = None
         self.bottom = None
-        self.game_map : List[List[GameObject]] = []
+        self.game_map: List[List[GameObject]] = []
         self.enemies = set()
         self.is_finale = False
 
@@ -171,7 +171,6 @@ class MapGenerator:
         if room.right:
             game_map[height // 2][width] = po.Door()
             game_map[height // 2 + 1][width] = po.Door()
-
 
 # debug system
 # def print_corridor(corridor: Room, length: int):

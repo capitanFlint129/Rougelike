@@ -30,6 +30,7 @@ class WorldController(Controller):
         if (game_state.current_room.is_finale and
                 isinstance(game_map[y][x], po.ExitPortal)):
             game_state.current_level += 1
+            game_state.hero.move_to(5, 5)
             self.new_level(game_state)
         elif isinstance(game_map[y][x], po.Door):
             height = game_state.current_room.height
@@ -54,7 +55,7 @@ class WorldController(Controller):
     @staticmethod
     def new_level(game_state):
         game_state.room_changed = True
-        game_state.current_room = MapGenerator(game_state.current_level + 1).generate_new_map()
+        game_state.current_room = MapGenerator(game_state.current_level).generate_new_map()
         game_state.hero.set_x(game_state.current_room.height // 2)
         game_state.hero.set_y(game_state.current_room.width // 2)
 

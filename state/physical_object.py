@@ -48,10 +48,10 @@ class Thorn(GameObject):
         self.icon = icon
 
     def get_name(self):
-        pass
+        return "thorns"
 
     def get_icon(self):
-        return
+        return self.icon
 
 
 class ExitPortal(GameObject):
