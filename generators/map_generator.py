@@ -148,8 +148,7 @@ class MapGenerator:
 
     def __fill_room(self, room: Room):
         fill_room_from_file(room, f"levels/template.txt")
-        for enemy in EnemyGenerator.generate_enemies(self.level, room.game_map):
-            room.enemies.add(enemy)
+        room.enemies = EnemyGenerator.generate_enemies(self.level, room.game_map)
 
     def __fill_final_room(self, room: Room):
         fill_room_from_file(room, f"levels/level_{self.level}.txt")
