@@ -1,5 +1,4 @@
 from controller.controller import Controller
-from state.hero import Hero
 from state.state import State
 import state.physical_object as po
 
@@ -10,9 +9,10 @@ class EnemiesController(Controller):
         enemies = game_state.current_room.enemies
         player = game_state.hero
         game_map = game_state.current_room.game_map
+        remove = set()
         for enemy in enemies:
             if not enemy.is_alive:
-                enemies.discard(enemy)
+                remove.add(enemy)
                 continue
             enemy_x, enemy_y = enemy.coordinates.x, enemy.coordinates.y
             next_x, next_y = enemy_x, enemy_y
@@ -34,3 +34,5 @@ class EnemiesController(Controller):
             if isinstance(next_cell, po.Wall) or isinstance(next_cell, po.MapBorder):
                 continue
             enemy.move_to(next_x, next_y)
+        for dead_enemy in remove:
+            enemies.discard(dead_enemy)

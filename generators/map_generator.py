@@ -117,7 +117,7 @@ class MapGenerator:
             next_room = [r for r in [room.left, room.right, room.top, room.bottom]
                          if r not in vis
                          and r is not None]
-            if not next_room:
+            if next_room:
                 self.__fill_room(room)
                 self.__add_doors_to_room(room)
                 dfs(next_room[0], vis)
@@ -160,8 +160,8 @@ class MapGenerator:
         height = room.height
         game_map = room.game_map
         if room.top:
-            game_map[0][width // 2] = po.Door()
-            game_map[0][width // 2 + 1] = po.Door()
+            game_map[1][width // 2] = po.Door()
+            game_map[1][width // 2 + 1] = po.Door()
         if room.bottom:
             game_map[height - 1][width // 2] = po.Door()
             game_map[height - 1][width // 2 + 1] = po.Door()
@@ -169,8 +169,8 @@ class MapGenerator:
             game_map[height // 2][0] = po.Door()
             game_map[height // 2 + 1][0] = po.Door()
         if room.right:
-            game_map[height // 2][width - 1] = po.Door()
-            game_map[height // 2 + 1][width - 1] = po.Door()
+            game_map[height // 2][width] = po.Door()
+            game_map[height // 2 + 1][width] = po.Door()
 
 
 # debug system
