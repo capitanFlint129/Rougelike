@@ -2,19 +2,32 @@ import random
 from enum import Enum
 from typing import NamedTuple
 from enemy_generator import EnemyGenerator
+from state.physical_object import Wall, Door
+from state.physical_object_factory import get_physical_object
 
 
+# class GameMap:
+#     def __init__(self, width=0, height=0):
+#         self.width = width
+#         self.height = height
+#         self.map = None
+
+# TODO: выбросить из map_generator
 class Room:
     def __init__(self, name: str):
+        # TODO: вынести в GameMap
+        self.width = 0
+        self.height = 0
+
         self.name = name
         self.type = None
         self.left = None
         self.right = None
         self.top = None
         self.bottom = None
-        self.map = None
+        self.game_map = None
         self.enemies = set()
-        self.items = []
+        self.is_finale = False
 
     def connect(self, other, direction):
         if direction == 'left':
@@ -71,10 +84,28 @@ def generate_corridor(n: int) -> Room:
     return first_room
 
 
+def fill_room_from_file(room: Room, path: str):
+    height = 0
+    width = 0
+    with open(path, "r") as levels_file:
+        i = 0
+        j = 0
+        for line in levels_file.readlines():
+            for c in list(line.strip()):
+                room.game_map[i][j] = get_physical_object(c)
+                j += 1
+            width = j - 1
+            i += 1
+            j = 0
+        height = i - 1
+    room.height = height
+    room.width = width
+
+
 class MapGenerator:
 
-    def __init__(self):
-        self.level = 1
+    def __init__(self, level=1):
+        self.level = level
         self.root = None
         self.number_rooms = 0
 
@@ -92,6 +123,8 @@ class MapGenerator:
 
         visited = set()
         dfs(self.root, visited)
+
+        return self.root
 
     def up_level(self):
         self.level += 1
@@ -111,14 +144,13 @@ class MapGenerator:
         return y + rnd
 
     def __fill_room(self, room: Room):
-        with open(f"levels/template.txt", "r") as levels_file:
-            room.map = [list(line.strip()) for line in levels_file.readlines()]
-        for x, y, enemy in EnemyGenerator.generate_enemies(self.level, room.map):
-            room.map[x][y] = enemy.get_icon()
+        fill_room_from_file(room, f"levels/template.txt")
+        for enemy in EnemyGenerator.generate_enemies(self.level, room.game_map):
+            room.enemies.add(enemy)
 
     def __fill_final_room(self, room: Room):
-        with open(f"levels/level_{self.level}.txt", "r") as levels_file:
-            room.map = [list(line.strip()) for line in levels_file.readlines()]
+        fill_room_from_file(room, f"levels/level_{self.level}.txt")
+        room.is_finale = True
 
 
 # debug system

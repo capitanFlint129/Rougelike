@@ -3,9 +3,12 @@ import time
 from controller.controller import Controller
 from state.enemy import Enemy
 from state.state import State
+from generators.map_generator import MapGenerator, Room
+import state.physical_object as po
 
 
 class WorldController(Controller):
+
     def update_state(self, game_state: State):
         if game_state.lives == 0:
             time.sleep(1)
@@ -20,30 +23,17 @@ class WorldController(Controller):
                 time.sleep(1)
                 exit()
             self.new_level(game_state)
-        if (game_state.player_y, game_state.player_x) in game_state.exits_coordinates:
+            return
+
+        x, y = game_state.hero.get_x(), game_state.hero.get_y()
+        if (game_state.current_room.is_finale and
+                isinstance(game_state.current_room.game_map[x][y], po.ExitPortal)):
             game_state.current_level += 1
             self.new_level(game_state)
 
     @staticmethod
     def new_level(game_state):
         game_state.level_changed = True
-        enemy_x = 60
-        enemy_y = 17
-        game_state.player_x = 6
-        game_state.player_y = 3
-        for row in game_state.level:
-            row.clear()
-        with open(f"levels/level_{game_state.current_level}.txt", "r") as levels_file:
-            game_state.level = [list(line.strip()) for line in levels_file.readlines()]
-
-        enemy = Enemy()
-        game_state.enemies.append((enemy_y, enemy_x, enemy, ' '))
-        game_state.level[game_state.player_y][game_state.player_x] = game_state.hero
-        game_state.level[enemy_y][enemy_x] = enemy
-
-        game_state.level.append(["  Score: ", ""])
-        game_state.level.append(["  Lives: ", ""])
-
-        # door
-        game_state.exits_coordinates = [(20, 60)]
-        game_state.level[20][60] = "+"
+        game_state.current_level = MapGenerator(game_state.current_level + 1).generate_new_map()
+        game_state.hero.set_x(game_state.current_room.height // 2)
+        game_state.hero.set_y(game_state.current_room.width // 2)
