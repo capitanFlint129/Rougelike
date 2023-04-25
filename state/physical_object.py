@@ -1,4 +1,4 @@
-from game_object import GameObject
+from state.game_object import GameObject
 
 
 class Wall(GameObject):
@@ -28,7 +28,7 @@ class Coin(GameObject):
 
 class FreeSpace(GameObject):
     def get_icon(self):
-        return ""
+        return " "
 
     def get_name(self):
         return "free space"

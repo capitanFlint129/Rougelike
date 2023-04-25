@@ -1,5 +1,5 @@
-import physical_object as po
-from game_object import GameObject
+import state.physical_object as po
+from state.game_object import GameObject
 
 
 def get_physical_object(symb: str) -> GameObject:
@@ -15,3 +15,5 @@ def get_physical_object(symb: str) -> GameObject:
         return po.Thorn(symb)
     if symb == "+":
         return po.ExitPortal()
+
+    return po.Wall()

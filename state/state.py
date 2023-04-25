@@ -13,5 +13,5 @@ class State:
         # Additional global state
         self.lives = 5
         self.score = 0
-        self.level_changed = False
+        self.room_changed = False
         self.current_level = 1

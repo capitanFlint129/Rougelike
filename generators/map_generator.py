@@ -1,8 +1,8 @@
 import random
-from enum import Enum
-from typing import NamedTuple
-from enemy_generator import EnemyGenerator
-from state.physical_object import Wall, Door
+from typing import List
+from generators.enemy_generator import EnemyGenerator
+import state.physical_object as po
+from state.game_object import GameObject
 from state.physical_object_factory import get_physical_object
 
 
@@ -25,7 +25,7 @@ class Room:
         self.right = None
         self.top = None
         self.bottom = None
-        self.game_map = None
+        self.game_map : List[List[GameObject]] = []
         self.enemies = set()
         self.is_finale = False
 
@@ -90,9 +90,11 @@ def fill_room_from_file(room: Room, path: str):
     with open(path, "r") as levels_file:
         i = 0
         j = 0
+        game_map = room.game_map
         for line in levels_file.readlines():
+            game_map.append([])
             for c in list(line.strip()):
-                room.game_map[i][j] = get_physical_object(c)
+                game_map[i].append(get_physical_object(c))
                 j += 1
             width = j - 1
             i += 1
@@ -115,12 +117,14 @@ class MapGenerator:
             next_room = [r for r in [room.left, room.right, room.top, room.bottom]
                          if r not in vis
                          and r is not None]
-            if next_room is not None:
+            if not next_room:
                 self.__fill_room(room)
+                self.__add_doors_to_room(room)
                 dfs(next_room[0], vis)
             else:
                 self.__fill_final_room(room)
 
+        self.__generate_rooms()
         visited = set()
         dfs(self.root, visited)
 
@@ -138,7 +142,6 @@ class MapGenerator:
         # points:
         # (1, 5)  (2, 8)  (3, 10) (4, 11) (5, 13)
         # (6, 14) (7, 14) (8, 15) (9, 15) (10, 16)
-        # next -= 16
         y = int(448.8 * (self.level ** 0.00102) - 443)
         rnd = random.randint(-1, 1)
         return y + rnd
@@ -152,35 +155,52 @@ class MapGenerator:
         fill_room_from_file(room, f"levels/level_{self.level}.txt")
         room.is_finale = True
 
+    def __add_doors_to_room(self, room: Room):
+        width = room.width
+        height = room.height
+        game_map = room.game_map
+        if room.top:
+            game_map[0][width // 2] = po.Door()
+            game_map[0][width // 2 + 1] = po.Door()
+        if room.bottom:
+            game_map[height - 1][width // 2] = po.Door()
+            game_map[height - 1][width // 2 + 1] = po.Door()
+        if room.left:
+            game_map[height // 2][0] = po.Door()
+            game_map[height // 2 + 1][0] = po.Door()
+        if room.right:
+            game_map[height // 2][width - 1] = po.Door()
+            game_map[height // 2 + 1][width - 1] = po.Door()
+
 
 # debug system
-def print_corridor(corridor: Room, length: int):
-    current_room = corridor
-    prev = None
-    corridor_str = ""
-
-    for _ in range(length):
-        next_room = None
-        direction_arrow = ""
-
-        if current_room.left and current_room.left != prev:
-            direction_arrow = "←"
-            next_room = current_room.left
-        elif current_room.top and current_room.top != prev:
-            direction_arrow = "↑"
-            next_room = current_room.top
-        elif current_room.right and current_room.right != prev:
-            direction_arrow = "→"
-            next_room = current_room.right
-        elif current_room.bottom and current_room.bottom != prev:
-            direction_arrow = "↓"
-            next_room = current_room.bottom
-
-        corridor_str += current_room.name + " " + direction_arrow + " "
-        prev = current_room
-        current_room = next_room
-
-    print(corridor_str.rstrip())
-
-
-print_corridor(generate_corridor(5), 5)
+# def print_corridor(corridor: Room, length: int):
+#     current_room = corridor
+#     prev = None
+#     corridor_str = ""
+#
+#     for _ in range(length):
+#         next_room = None
+#         direction_arrow = ""
+#
+#         if current_room.left and current_room.left != prev:
+#             direction_arrow = "←"
+#             next_room = current_room.left
+#         elif current_room.top and current_room.top != prev:
+#             direction_arrow = "↑"
+#             next_room = current_room.top
+#         elif current_room.right and current_room.right != prev:
+#             direction_arrow = "→"
+#             next_room = current_room.right
+#         elif current_room.bottom and current_room.bottom != prev:
+#             direction_arrow = "↓"
+#             next_room = current_room.bottom
+#
+#         corridor_str += current_room.name + " " + direction_arrow + " "
+#         prev = current_room
+#         current_room = next_room
+#
+#     print(corridor_str.rstrip())
+#
+#
+# print_corridor(generate_corridor(5), 5)
