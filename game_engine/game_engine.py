@@ -20,6 +20,7 @@ class GameEngine:
     ):
         self.state = state
         self.controllers = controllers
+        self.max_health = 0
 
     def run(self):
         term = Terminal()
@@ -65,8 +66,23 @@ class GameEngine:
             x, y = enemy.get_x(), enemy.get_y()
             echo(term.move_yx(y, x) + enemy.get_icon(), end="")
 
-        echo(term.move_yx(24, 10) + str(self.state.score), end="")
-        echo(term.move_yx(25, 10) + str(self.state.lives), end="")
+        self._print_status_bar(term)
+
+    def _print_status_bar(self, term):
+        echo(term.move_yx(24, 0) + "level: " + str(self.state.current_level), end="")
+        echo(term.move_yx(24, 10) + "power: " + str(self.state.hero.power), end="")
+        echo(term.move_yx(25, 10) + self._get_health_bar(), end="")
+        echo(term.move_yx(26, 10) + "score: " + str(self.state.score), end="")
+        echo(term.move_yx(27, 10) + "lives: " + ("♥" * self.state.lives), end="")
+
+    def _get_health_bar(self):
+        hero_health = self.state.hero.health
+        self.max_health = max(hero_health, self.max_health)
+        health_percent = int((hero_health / self.max_health) * 100)
+        num_bars = int(health_percent / 10)
+        num_spaces = 10 - num_bars
+        health_bar = "[" + ("|" * num_bars) + (" " * num_spaces) + "] " + str(health_percent) + "%" + " " * 10
+        return health_bar
 
     @staticmethod
     def _echo_level(game_state):

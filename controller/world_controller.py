@@ -11,6 +11,11 @@ class WorldController(Controller):
         if game_state.lives == 0:
             self.handle_game_over(game_state)
             return
+        if not game_state.hero.is_alive:
+            game_state.lives -= 1
+            game_state.hero.resurrect_player()
+            self.new_level(game_state)
+            return
 
         x, y = game_state.hero.get_x(), game_state.hero.get_y()
         game_map = game_state.current_room.game_map

@@ -11,3 +11,7 @@ class Hero(Actor):
 
     def get_name(self):
         return "hero"
+
+    def resurrect_player(self):
+        self.health = 10
+        self.is_alive = True

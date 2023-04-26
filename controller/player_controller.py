@@ -55,6 +55,5 @@ class PlayerController(Controller):
             game_state.score += 1
             game_state.current_room.game_map[next_y][next_x] = po.FreeSpace()
         elif isinstance(next_cell, Item):
-            print("item got")
             game_state.hero.equip(next_cell)
             game_state.current_room.game_map[next_y][next_x] = po.FreeSpace()
