@@ -8,30 +8,36 @@ class EnemiesController(Controller):
         enemies = game_state.current_room.enemies
         player = game_state.hero
         game_map = game_state.current_room.game_map
-        remove = set()
+
+        dead_enemies = set()
         for enemy in enemies:
             if not enemy.is_alive:
-                remove.add(enemy)
-                continue
-            enemy_x, enemy_y = enemy.coordinates.x, enemy.coordinates.y
-            next_x, next_y = enemy_x, enemy_y
-            player_x, player_y = player.coordinates.x, player.coordinates.y
-            if player_y > next_y:
-                next_y += 1
-            if player_y < enemy_y:
-                next_y -= 1
-            if player_x > enemy_x:
-                next_x += 1
-            if player_x < enemy_x:
-                next_x -= 1
+                dead_enemies.add(enemy)
+            else:
+                self._update_enemy_position(game_state, enemy)
 
-            next_cell = game_map[next_y][next_x]
+        self._remove_dead_enemies(enemies, dead_enemies)
 
-            if player_x == next_x and player_y == next_y:
-                enemy.attack(player)
-                continue
-            if isinstance(next_cell, po.Wall) or isinstance(next_cell, po.MapBorder):
-                continue
+    def _update_enemy_position(self, game_state, enemy):
+        next_x, next_y = self._get_next_coordinates(game_state.hero.coordinates, enemy.coordinates)
+        next_cell = game_state.current_room.game_map[next_y][next_x]
+
+        if game_state.hero.coordinates == (next_x, next_y):
+            enemy.attack(game_state.hero)
+        elif not isinstance(next_cell, (po.Wall, po.MapBorder)):
             enemy.move_to(next_x, next_y)
-        for dead_enemy in remove:
+
+    @staticmethod
+    def _get_next_coordinates(player_coordinates, enemy_coordinates):
+        def sign(x):
+            return -1 if x < 0 else (1 if x > 0 else 0)
+
+        dx = sign(player_coordinates.x - enemy_coordinates.x)
+        dy = sign(player_coordinates.y - enemy_coordinates.y)
+
+        return enemy_coordinates.x + dx, enemy_coordinates.y + dy
+
+    @staticmethod
+    def _remove_dead_enemies(enemies, dead_enemies):
+        for dead_enemy in dead_enemies:
             enemies.discard(dead_enemy)
