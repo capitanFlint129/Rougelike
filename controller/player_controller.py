@@ -2,6 +2,7 @@ from controller.controller import Controller
 from gui.command_handler import CommandHandler, UserCommand
 from state.enemy import Enemy
 from state.state import State
+from state.item import Item
 import state.physical_object as po
 
 
@@ -43,4 +44,8 @@ class PlayerController(Controller):
             game_state.lives -= 1
         if isinstance(next_cell, po.Coin):
             game_state.score += 1
-            game_map[next_y][next_x] = po.FreeSpace
+            game_map[next_y][next_x] = po.FreeSpace()
+        if isinstance(next_cell, Item):
+            print("item got")
+            player.equip(next_cell)
+            game_map[next_y][next_x] = po.FreeSpace()

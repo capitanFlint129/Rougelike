@@ -2,7 +2,10 @@ import random
 from typing import List
 from generators.enemy_generator import EnemyGenerator
 import state.physical_object as po
+from generators.item_generator import ItemGenerator
+from state.enemy import Enemy
 from state.game_object import GameObject
+from state.item import Sword
 from state.physical_object_factory import get_physical_object
 
 
@@ -96,10 +99,10 @@ def fill_room_from_file(room: Room, path: str):
             for c in list(line.strip()):
                 game_map[i].append(get_physical_object(c))
                 j += 1
-            width = j - 1
+            width = j
             i += 1
             j = 0
-        height = i - 1
+        height = i
     room.height = height
     room.width = width
 
@@ -149,56 +152,28 @@ class MapGenerator:
     def __fill_room(self, room: Room):
         fill_room_from_file(room, f"levels/template.txt")
         room.enemies = EnemyGenerator.generate_enemies(self.level, room.game_map)
+        ItemGenerator.generate_items(self.level, room.game_map)
 
     def __fill_final_room(self, room: Room):
         fill_room_from_file(room, f"levels/level_{self.level}.txt")
+        room.enemies = {Enemy(60, 17)}
+        room.game_map[20][10] = Sword()
         room.is_finale = True
 
-    def __add_doors_to_room(self, room: Room):
+    @staticmethod
+    def __add_doors_to_room(room: Room):
         width = room.width
         height = room.height
         game_map = room.game_map
         if room.top:
-            game_map[1][width // 2] = po.Door()
-            game_map[1][width // 2 + 1] = po.Door()
+            game_map[0][width // 2] = po.Door()
+            game_map[0][width // 2 - 1] = po.Door()
         if room.bottom:
             game_map[height - 1][width // 2] = po.Door()
-            game_map[height - 1][width // 2 + 1] = po.Door()
+            game_map[height - 1][width // 2 - 1] = po.Door()
         if room.left:
             game_map[height // 2][0] = po.Door()
-            game_map[height // 2 + 1][0] = po.Door()
+            game_map[height // 2 - 1][0] = po.Door()
         if room.right:
-            game_map[height // 2][width] = po.Door()
-            game_map[height // 2 + 1][width] = po.Door()
-
-# debug system
-# def print_corridor(corridor: Room, length: int):
-#     current_room = corridor
-#     prev = None
-#     corridor_str = ""
-#
-#     for _ in range(length):
-#         next_room = None
-#         direction_arrow = ""
-#
-#         if current_room.left and current_room.left != prev:
-#             direction_arrow = "←"
-#             next_room = current_room.left
-#         elif current_room.top and current_room.top != prev:
-#             direction_arrow = "↑"
-#             next_room = current_room.top
-#         elif current_room.right and current_room.right != prev:
-#             direction_arrow = "→"
-#             next_room = current_room.right
-#         elif current_room.bottom and current_room.bottom != prev:
-#             direction_arrow = "↓"
-#             next_room = current_room.bottom
-#
-#         corridor_str += current_room.name + " " + direction_arrow + " "
-#         prev = current_room
-#         current_room = next_room
-#
-#     print(corridor_str.rstrip())
-#
-#
-# print_corridor(generate_corridor(5), 5)
+            game_map[height // 2][width - 1] = po.Door()
+            game_map[height // 2 - 1][width - 1] = po.Door()

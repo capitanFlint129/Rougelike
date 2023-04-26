@@ -39,15 +39,15 @@ class WorldController(Controller):
             if x == 0:
                 game_state.current_room = game_state.current_room.left
                 player.move_to(width - 2, player.get_y())
-            elif y == 1:
+            elif y == 0:
                 game_state.current_room = game_state.current_room.top
                 player.move_to(player.get_x(), height - 2)
-            elif y >= height - 2:
+            elif y == height - 1:
                 game_state.current_room = game_state.current_room.bottom
                 player.move_to(player.get_x(), 3)
             else:
                 game_state.current_room = game_state.current_room.right
-                player.move_to(2, player.get_y())
+                player.move_to(3, player.get_y())
             if game_state.current_room.is_finale:
                 player.move_to(6, 3)
             game_state.room_changed = True
