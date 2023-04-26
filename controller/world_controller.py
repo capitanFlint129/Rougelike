@@ -8,7 +8,6 @@ import state.physical_object as po
 
 
 class WorldController(Controller):
-
     def update_state(self, game_state: State):
         if game_state.lives == 0:
             time.sleep(1)
@@ -27,8 +26,9 @@ class WorldController(Controller):
 
         x, y = game_state.hero.get_x(), game_state.hero.get_y()
         game_map = game_state.current_room.game_map
-        if (game_state.current_room.is_finale and
-                isinstance(game_map[y][x], po.ExitPortal)):
+        if game_state.current_room.is_finale and isinstance(
+            game_map[y][x], po.ExitPortal
+        ):
             game_state.current_level += 1
             game_state.hero.move_to(5, 5)
             self.new_level(game_state)
@@ -38,10 +38,10 @@ class WorldController(Controller):
             player = game_state.hero
             if x == 0:
                 game_state.current_room = game_state.current_room.left
-                player.move_to(width - 2, player.get_y())
+                player.move_to(width - 3, player.get_y())
             elif y == 0:
                 game_state.current_room = game_state.current_room.top
-                player.move_to(player.get_x(), height - 2)
+                player.move_to(player.get_x(), height - 3)
             elif y == height - 1:
                 game_state.current_room = game_state.current_room.bottom
                 player.move_to(player.get_x(), 3)
@@ -55,7 +55,8 @@ class WorldController(Controller):
     @staticmethod
     def new_level(game_state):
         game_state.room_changed = True
-        game_state.current_room = MapGenerator(game_state.current_level).generate_new_map()
+        game_state.current_room = MapGenerator(
+            game_state.current_level
+        ).generate_new_map()
         game_state.hero.set_x(game_state.current_room.height // 2)
         game_state.hero.set_y(game_state.current_room.width // 2)
-

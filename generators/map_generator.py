@@ -1,27 +1,19 @@
 import random
-from typing import List
+from typing import List, Set
 from generators.enemy_generator import EnemyGenerator
-import state.physical_object as po
 from generators.item_generator import ItemGenerator
+import state.physical_object as po
 from state.enemy import Enemy
 from state.game_object import GameObject
 from state.item import Sword
 from state.physical_object_factory import get_physical_object
 
 
-# class GameMap:
-#     def __init__(self, width=0, height=0):
-#         self.width = width
-#         self.height = height
-#         self.map = None
-
-# TODO: выбросить из map_generator
+# TODO: Создать game_map.py, вынести руму туда
 class Room:
     def __init__(self, name: str):
-        # TODO: вынести в GameMap
         self.width = 0
         self.height = 0
-
         self.name = name
         self.type = None
         self.left = None
@@ -32,17 +24,17 @@ class Room:
         self.enemies = set()
         self.is_finale = False
 
-    def connect(self, other, direction):
-        if direction == 'left':
+    def connect(self, other: 'Room', direction: str):
+        if direction == "left":
             self.left = other
             other.right = self
-        elif direction == 'right':
+        elif direction == "right":
             self.right = other
             other.left = self
-        elif direction == 'top':
+        elif direction == "top":
             self.top = other
             other.bottom = self
-        elif direction == 'bottom':
+        elif direction == "bottom":
             self.bottom = other
             other.top = self
         else:
@@ -53,94 +45,59 @@ class Room:
 
 
 def generate_corridor(n: int) -> Room:
-    name_i = 0
-    first_room = Room(str(name_i))
+    first_room = Room("0")
+    prev_direction = ""
     current_room = first_room
-    previous_direction = ""
-    directions = {"left", "right", "top", "bottom"}
-    for _ in range(n - 1):
-        name_i += 1
-        new_room = Room(str(name_i))
-        directions.discard(previous_direction)
-        available_directions = [d for d in directions]
-        direction = random.choice(available_directions)
-        if previous_direction:
-            directions.add(previous_direction)
-        if direction == "left":
-            current_room.left = new_room
-            new_room.right = current_room
-            previous_direction = "right"
-        elif direction == "right":
-            current_room.right = new_room
-            new_room.left = current_room
-            previous_direction = "left"
-        elif direction == "top":
-            current_room.top = new_room
-            new_room.bottom = current_room
-            previous_direction = "bottom"
-        elif direction == "bottom":
-            current_room.bottom = new_room
-            new_room.top = current_room
-            previous_direction = "top"
+    opposite_direction = {"left": "right", "right": "left", "top": "bottom", "bottom": "top"}
+
+    for i in range(1, n):
+        new_room = Room(str(i))
+        available_directions = set(opposite_direction.keys()) - {prev_direction}
+        direction = random.choice(list(available_directions))
+        current_room.connect(new_room, direction)
         current_room = new_room
+        prev_direction = opposite_direction[direction]
 
     return first_room
 
 
 def fill_room_from_file(room: Room, path: str):
-    height = 0
-    width = 0
     with open(path, "r") as levels_file:
-        i = 0
-        j = 0
-        game_map = room.game_map
-        for line in levels_file.readlines():
-            game_map.append([])
-            for c in list(line.strip()):
-                game_map[i].append(get_physical_object(c))
-                j += 1
-            width = j
-            i += 1
-            j = 0
-        height = i
-    room.height = height
-    room.width = width
+        game_map = [list(line.strip()) for line in levels_file.readlines()]
+        room.game_map = [[get_physical_object(c) for c in row] for row in game_map]
+        room.height = len(game_map)
+        room.width = len(game_map[0])
 
 
 class MapGenerator:
-
     def __init__(self, level=1):
         self.level = level
         self.root = None
         self.number_rooms = 0
 
     def generate_new_map(self):
-        def dfs(room: Room, vis: set):
-            vis.add(room)
-            next_room = [r for r in [room.left, room.right, room.top, room.bottom]
-                         if r not in vis
-                         and r is not None]
-            if next_room:
-                self.__fill_room(room)
-                self.__add_doors_to_room(room)
-                dfs(next_room[0], vis)
+        def dfs(room: Room, visited: Set[Room]):
+            visited.add(room)
+            next_rooms = [r for r in [room.left, room.right, room.top, room.bottom]
+                          if r not in visited
+                          and r is not None]
+            if next_rooms:
+                self._fill_room(room)
+                self._add_doors_to_room(room)
+                dfs(next_rooms[0], visited)
             else:
-                self.__fill_final_room(room)
+                self._fill_final_room(room)
 
-        self.__generate_rooms()
-        visited = set()
-        dfs(self.root, visited)
+        self._generate_rooms()
+        dfs(self.root, set())
 
         return self.root
 
-    def up_level(self):
-        self.level += 1
-
-    def __generate_rooms(self):
-        self.number_rooms = self.__get_count_rooms()
+    def _generate_rooms(self):
+        self.number_rooms = self._get_count_rooms()
         self.root = generate_corridor(self.number_rooms)
 
-    def __get_count_rooms(self):
+    def _get_count_rooms(self):
         # Power (Including Inverse and nth Root) using Curve Fitting
         # points:
         # (1, 5)  (2, 8)  (3, 10) (4, 11) (5, 13)
@@ -149,19 +106,19 @@ class MapGenerator:
         rnd = random.randint(-1, 1)
         return y + rnd
 
-    def __fill_room(self, room: Room):
+    def _fill_room(self, room: Room):
         fill_room_from_file(room, f"levels/template.txt")
         room.enemies = EnemyGenerator.generate_enemies(self.level, room.game_map)
         ItemGenerator.generate_items(self.level, room.game_map)
 
-    def __fill_final_room(self, room: Room):
+    def _fill_final_room(self, room: Room):
         fill_room_from_file(room, f"levels/level_{self.level}.txt")
         room.enemies = {Enemy(60, 17)}
         room.game_map[20][10] = Sword()
         room.is_finale = True
 
     @staticmethod
-    def __add_doors_to_room(room: Room):
+    def _add_doors_to_room(room: Room):
         width = room.width
         height = room.height
         game_map = room.game_map

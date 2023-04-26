@@ -18,7 +18,6 @@ class Door(GameObject):
 
 
 class Coin(GameObject):
-
     def get_icon(self):
         return "c"
 

@@ -4,7 +4,6 @@ import state.physical_object as po
 
 
 class EnemiesController(Controller):
-
     def update_state(self, game_state: State):
         enemies = game_state.current_room.enemies
         player = game_state.hero

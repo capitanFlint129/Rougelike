@@ -4,7 +4,6 @@ from state.enemy import Enemy
 
 
 class EnemyGenerator:
-
     @staticmethod
     def generate_enemies(level: int, map_array: List) -> Set[Enemy]:
         x = random.randint(3, len(map_array[0]) - 3)
