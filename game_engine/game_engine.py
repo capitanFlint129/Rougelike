@@ -4,7 +4,7 @@ from functools import partial
 from blessed import Terminal
 
 from controller.controller import Controller
-from gui.command_handler import CommandHandler
+from gui.command_handler import CommandHandler, UserCommand
 from state.state import State
 
 echo = partial(print, end="", flush=True)
@@ -21,20 +21,82 @@ class GameEngine:
         self.state = state
         self.controllers = controllers
         self.max_health = 0
+        self.command_handler = command_handler
 
     def run(self):
         term = Terminal()
         with term.cbreak(), term.fullscreen(), term.hidden_cursor():
             while True:
-                old_player_coords, old_enemy_coords = self._get_old_coordinates()
-                self._apply_controllers()
+                if self.command_handler.get_command() == UserCommand.OPEN_INVENTORY:
+                    self._open_inventory(term)
+                else:
+                    self._run_game_step(term)
 
-                if self.state.room_changed:
-                    old_enemy_coords = {}
-                    self._handle_room_change(term)
+    def _run_game_step(self, term):
+        old_player_coords, old_enemy_coords = self._get_old_coordinates()
+        self._apply_controllers()
 
-                self._update_display(term, old_player_coords, old_enemy_coords)
-                time.sleep(0.1)
+        if self.state.room_changed:
+            old_enemy_coords = {}
+            self._handle_room_change(term)
+
+        self._update_display(term, old_player_coords, old_enemy_coords)
+        time.sleep(0.1)
+
+    def _open_inventory(self, term):
+        user_position = 0
+        items_in_menu = 3
+        menu_slot_width = 30
+        items_list = list(self.state.hero.inventory)
+        self._print_inventory(
+            term, items_list, user_position, items_in_menu, menu_slot_width
+        )
+        time.sleep(0.2)
+        while True:
+            current_item = items_list[user_position]
+            user_command = self.command_handler.get_command()
+            if user_command == UserCommand.UP:
+                user_position = max(0, user_position - 1)
+            elif user_command == UserCommand.DOWN:
+                user_position = min(len(items_list) - 1, user_position + 1)
+            elif user_command == UserCommand.APPLY:
+                if current_item in self.state.hero.equipped:
+                    self.state.hero.unequip(current_item)
+                else:
+                    self.state.hero.equip(current_item)
+            elif user_command == UserCommand.OPEN_INVENTORY:
+                break
+            self._print_inventory(
+                term, items_list, user_position, items_in_menu, menu_slot_width
+            )
+            time.sleep(0.1)
+        self._clear_inventory(term, items_in_menu, menu_slot_width)
+        time.sleep(0.1)
+
+    def _print_inventory(
+        self, term, items_list, user_position, items_in_menu, menu_slot_width
+    ):
+        self._clear_inventory(term, items_in_menu, menu_slot_width)
+        view_start = user_position - user_position % items_in_menu
+        view_end = min(view_start + items_in_menu, len(items_list))
+        echo(term.move_yx(24, 39) + f"Inventory: {view_start + 1}-{view_end + 1}")
+        for i in range(0, view_end - view_start):
+            current_position = view_start + i
+            item_string = self._get_item_string_for_menu(items_list[current_position])[
+                :menu_slot_width
+            ]
+            if current_position == user_position:
+                item_string = term.black_on_snow(item_string)
+            echo(term.move_yx(25 + i, 39) + item_string)
+
+    def _clear_inventory(self, term, items_in_menu, menu_slot_width):
+        for i in range(items_in_menu + 1):
+            echo(term.move_yx(24 + i, 39) + " " * menu_slot_width)
+
+    def _get_item_string_for_menu(self, item):
+        if item in self.state.hero.equipped:
+            return "[x] " + item.get_name()
+        return "[ ] " + item.get_name()
 
     def _apply_controllers(self):
         for controller in self.controllers:
@@ -49,7 +111,11 @@ class GameEngine:
     def _handle_room_change(self, term):
         echo(term.home + term.clear)
         self._echo_level(self.state)
-        echo(term.move_yx(self.state.hero.get_y(), self.state.hero.get_x()) + self.state.hero.get_icon(), end="")
+        echo(
+            term.move_yx(self.state.hero.get_y(), self.state.hero.get_x())
+            + self.state.hero.get_icon(),
+            end="",
+        )
         self.state.room_changed = False
 
     def _update_display(self, term, old_player_coords, old_enemy_coords):
@@ -81,7 +147,15 @@ class GameEngine:
         health_percent = int((hero_health / self.max_health) * 100)
         num_bars = int(health_percent / 10)
         num_spaces = 10 - num_bars
-        health_bar = "[" + ("|" * num_bars) + (" " * num_spaces) + "] " + str(health_percent) + "%" + " " * 10
+        health_bar = (
+            "["
+            + ("|" * num_bars)
+            + (" " * num_spaces)
+            + "] "
+            + str(health_percent)
+            + "%"
+            + " " * 10
+        )
         return health_bar
 
     @staticmethod

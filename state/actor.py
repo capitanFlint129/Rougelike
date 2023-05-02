@@ -1,4 +1,5 @@
 from abc import ABC
+from typing import Set
 
 from state.game_object import GameObject
 from state.item import Item
@@ -25,13 +26,13 @@ class Coordinates:
             raise ValueError("Argument must be of type Coordinates.")
         x_diff = self.x - other.x
         y_diff = self.y - other.y
-        return (x_diff ** 2 + y_diff ** 2) ** 0.5
+        return (x_diff**2 + y_diff**2) ** 0.5
 
 
 class Actor(GameObject, ABC):
     def __init__(self, x, y):
-        self.inventory: [Item] = []
-        self.equipped: [Item] = []
+        self.inventory: Set[Item] = set()
+        self.equipped: Set[Item] = set()
         self.health = 10
         self.power = 1
         self.is_alive = True
@@ -42,10 +43,13 @@ class Actor(GameObject, ABC):
         actor.get_damage(power)
 
     def get_item(self, item: Item):
-        self.inventory.append(item)
+        self.inventory.add(item)
 
     def equip(self, item: Item):
-        self.equipped.append(item)
+        self.equipped.add(item)
+
+    def unequip(self, item: Item):
+        self.equipped.remove(item)
 
     def get_damage(self, damage):
         armor = sum([item.armor_bonus() for item in self.equipped])

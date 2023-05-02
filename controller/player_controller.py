@@ -42,7 +42,9 @@ class PlayerController(Controller):
                 return
 
     @staticmethod
-    def _handle_map_objects(game_state: State, next_y: int, next_x: int, next_cell: GameObject) -> None:
+    def _handle_map_objects(
+        game_state: State, next_y: int, next_x: int, next_cell: GameObject
+    ) -> None:
         if isinstance(next_cell, (po.Wall, po.MapBorder, Enemy)):
             return
 
@@ -55,5 +57,5 @@ class PlayerController(Controller):
             game_state.score += 1
             game_state.current_room.game_map[next_y][next_x] = po.FreeSpace()
         elif isinstance(next_cell, Item):
-            game_state.hero.equip(next_cell)
+            game_state.hero.inventory.add(next_cell)
             game_state.current_room.game_map[next_y][next_x] = po.FreeSpace()
