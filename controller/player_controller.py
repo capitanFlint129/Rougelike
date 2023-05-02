@@ -1,8 +1,12 @@
+from typing import Tuple
+
 from controller.controller import Controller
 from gui.command_handler import CommandHandler, UserCommand
 from state.enemy import Enemy
-from state.item import Item
+from state.game_object import GameObject
 from state.state import State
+from state.item import Item
+import state.physical_object as po
 
 
 class PlayerController(Controller):
@@ -10,34 +14,46 @@ class PlayerController(Controller):
         self.command_handler = command_handler
 
     def update_state(self, game_state: State):
-        command = self.command_handler.get_command()
-        next_y = game_state.player_y
-        next_x = game_state.player_x
-        game_state.level[game_state.player_y][game_state.player_x] = ""
-        if command == UserCommand.DOWN:
-            next_y, next_x = game_state.player_y + 1, game_state.player_x
-        elif command == UserCommand.UP:
-            next_y, next_x = game_state.player_y - 1, game_state.player_x
-        elif command == UserCommand.RIGHT:
-            next_y, next_x = game_state.player_y, game_state.player_x + 1
-        elif command == UserCommand.LEFT:
-            next_y, next_x = game_state.player_y, game_state.player_x - 1
+        next_y, next_x = self._get_next_coordinates(game_state.hero.coordinates)
+        next_cell = game_state.current_room.game_map[next_y][next_x]
 
-        next_cell = game_state.level[next_y][next_x]
-        if isinstance(next_cell, Enemy):
-            game_state.hero.attack(next_cell)
-        elif not next_cell == "#":
-            if isinstance(next_cell, Item):
-                game_state.hero.get_item(next_cell)
-            game_state.player_y = next_y
-            game_state.player_x = next_x
-            if next_cell in ["^", ">", "v", "<"]:
-                game_state.score = 0
-                game_state.lives -= 1
-            if next_cell == "c":
-                game_state.score += 1
-                game_state.level[next_y][next_x] = ""
-            if next_cell == "H":
-                game_state.lives += 1
-                game_state.level[next_y][next_x] = ""
-        game_state.level[game_state.player_y][game_state.player_x] = game_state.hero
+        self._handle_enemies(game_state, next_y, next_x)
+        self._handle_map_objects(game_state, next_y, next_x, next_cell)
+
+    def _get_next_coordinates(self, coordinates) -> Tuple:
+        movement = {
+            UserCommand.DOWN: (1, 0),
+            UserCommand.UP: (-1, 0),
+            UserCommand.RIGHT: (0, 1),
+            UserCommand.LEFT: (0, -1),
+        }
+        command = self.command_handler.get_command()
+        if command in movement:
+            dy, dx = movement[command]
+            return coordinates.y + dy, coordinates.x + dx
+
+        return coordinates.y, coordinates.x
+
+    @staticmethod
+    def _handle_enemies(game_state: State, next_y: int, next_x: int) -> None:
+        for enemy in game_state.current_room.enemies:
+            if enemy.coordinates == (next_x, next_y):
+                game_state.hero.attack(enemy)
+                return
+
+    @staticmethod
+    def _handle_map_objects(game_state: State, next_y: int, next_x: int, next_cell: GameObject) -> None:
+        if isinstance(next_cell, (po.Wall, po.MapBorder, Enemy)):
+            return
+
+        game_state.hero.move_to(next_x, next_y)
+
+        if isinstance(next_cell, po.Thorn):
+            game_state.score = 0
+            game_state.lives -= 1
+        elif isinstance(next_cell, po.Coin):
+            game_state.score += 1
+            game_state.current_room.game_map[next_y][next_x] = po.FreeSpace()
+        elif isinstance(next_cell, Item):
+            game_state.hero.equip(next_cell)
+            game_state.current_room.game_map[next_y][next_x] = po.FreeSpace()

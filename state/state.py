@@ -1,19 +1,17 @@
 from state.hero import Hero
+from generators.map_generator import Room
 
 
 class State:
     def __init__(self, hero: Hero):
-        self.rows_number = 26
-        self.level = []
-        self.enemies = []
-        self.items = []
-        self.exits_coordinates = []
+        # current GameMap - room with enemies and items.
+        self.current_room: Room = Room("0")
+
+        # Player
         self.hero = hero
-        self.player_x = 6
-        self.player_y = 3
-        self.last_x = 6
-        self.last_y = 3
+
+        # Additional global state
         self.lives = 5
         self.score = 0
-        self.level_changed = False
+        self.room_changed = False
         self.current_level = 1
