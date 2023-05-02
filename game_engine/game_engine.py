@@ -38,12 +38,12 @@ class GameEngine:
                     exit()
 
     def _show_game_over_message(self, term):
-        echo(term.move_yx(11, 29) + "~" * (43 + len(str(self.state.score))))
+        echo(term.move_yx(11, 13) + "~" * (37 + len(str(self.state.score))))
         echo(
-            term.move_yx(12, 29)
-            + f"~Your score is {self.state.score}. Press enter to play again~"
+            term.move_yx(12, 13)
+            + f"~Your score is {self.state.score}. Press enter to exit~"
         )
-        echo(term.move_yx(13, 29) + "~" * (43 + len(str(self.state.score))))
+        echo(term.move_yx(13, 13) + "~" * (37 + len(str(self.state.score))))
 
     def _run_game_step(self, term):
         old_player_coords, old_enemy_coords = self._get_old_coordinates()
