@@ -4,10 +4,15 @@ import keyboard
 
 
 class UserCommand(Enum):
+    # Movement
     UP = 1
     DOWN = 2
     LEFT = 3
     RIGHT = 4
+    # Menu
+    OPEN_INVENTORY = 5
+    APPLY = 6
+
 
 
 class CommandHandler:
@@ -21,5 +26,7 @@ class CommandHandler:
             return UserCommand.LEFT
         elif keyboard.is_pressed("d"):
             return UserCommand.RIGHT
-        else:
-            pass
+        elif keyboard.is_pressed("i"):
+            return UserCommand.OPEN_INVENTORY
+        elif keyboard.is_pressed("enter"):
+            return UserCommand.APPLY
