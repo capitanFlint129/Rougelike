@@ -19,7 +19,9 @@ class EnemiesController(Controller):
         self._remove_dead_enemies(enemies, dead_enemies)
 
     def _update_enemy_position(self, game_state, enemy):
-        next_x, next_y = self._get_next_coordinates(game_state.hero.coordinates, enemy.coordinates)
+        next_x, next_y = self._get_next_coordinates(
+            game_state.hero.coordinates, enemy.coordinates
+        )
         next_cell = game_state.current_room.game_map[next_y][next_x]
 
         if game_state.hero.coordinates == (next_x, next_y):

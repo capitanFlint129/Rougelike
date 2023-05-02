@@ -14,7 +14,6 @@ class UserCommand(Enum):
     APPLY = 6
 
 
-
 class CommandHandler:
     @staticmethod
     def get_command() -> UserCommand:

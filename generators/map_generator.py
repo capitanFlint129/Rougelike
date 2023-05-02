@@ -24,7 +24,7 @@ class Room:
         self.enemies = set()
         self.is_finale = False
 
-    def connect(self, other: 'Room', direction: str):
+    def connect(self, other: "Room", direction: str):
         if direction == "left":
             self.left = other
             other.right = self
@@ -48,7 +48,12 @@ def generate_corridor(n: int) -> Room:
     first_room = Room("0")
     prev_direction = ""
     current_room = first_room
-    opposite_direction = {"left": "right", "right": "left", "top": "bottom", "bottom": "top"}
+    opposite_direction = {
+        "left": "right",
+        "right": "left",
+        "top": "bottom",
+        "bottom": "top",
+    }
 
     for i in range(1, n):
         new_room = Room(str(i))
@@ -78,9 +83,11 @@ class MapGenerator:
     def generate_new_map(self):
         def dfs(room: Room, visited: Set[Room]):
             visited.add(room)
-            next_rooms = [r for r in [room.left, room.right, room.top, room.bottom]
-                          if r not in visited
-                          and r is not None]
+            next_rooms = [
+                r
+                for r in [room.left, room.right, room.top, room.bottom]
+                if r not in visited and r is not None
+            ]
             if next_rooms:
                 self._fill_room(room)
                 self._add_doors_to_room(room)
@@ -102,7 +109,7 @@ class MapGenerator:
         # points:
         # (1, 5)  (2, 8)  (3, 10) (4, 11) (5, 13)
         # (6, 14) (7, 14) (8, 15) (9, 15) (10, 16)
-        y = int(448.8 * (self.level ** 0.00102) - 443)
+        y = int(448.8 * (self.level**0.00102) - 443)
         rnd = random.randint(-1, 1)
         return y + rnd
 

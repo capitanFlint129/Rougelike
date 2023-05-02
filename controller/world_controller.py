@@ -20,7 +20,9 @@ class WorldController(Controller):
         x, y = game_state.hero.get_x(), game_state.hero.get_y()
         game_map = game_state.current_room.game_map
 
-        if game_state.current_room.is_finale and isinstance(game_map[y][x], po.ExitPortal):
+        if game_state.current_room.is_finale and isinstance(
+            game_map[y][x], po.ExitPortal
+        ):
             self.handle_level_completion(game_state)
         elif isinstance(game_map[y][x], po.Door):
             self.handle_door_transition(game_state, x, y)
@@ -72,6 +74,8 @@ class WorldController(Controller):
     @staticmethod
     def new_level(game_state):
         game_state.room_changed = True
-        game_state.current_room = MapGenerator(game_state.current_level).generate_new_map()
+        game_state.current_room = MapGenerator(
+            game_state.current_level
+        ).generate_new_map()
         game_state.hero.set_x(game_state.current_room.height // 2)
         game_state.hero.set_y(game_state.current_room.width // 2)
