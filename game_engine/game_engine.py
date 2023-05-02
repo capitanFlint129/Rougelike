@@ -31,6 +31,19 @@ class GameEngine:
                     self._open_inventory(term)
                 else:
                     self._run_game_step(term)
+                if self.state.lives == 0:
+                    self._show_game_over_message(term)
+                    while self.command_handler.get_command() != UserCommand.APPLY:
+                        time.sleep(0.1)
+                    exit()
+
+    def _show_game_over_message(self, term):
+        echo(term.move_yx(11, 29) + "~" * (43 + len(str(self.state.score))))
+        echo(
+            term.move_yx(12, 29)
+            + f"~Your score is {self.state.score}. Press enter to play again~"
+        )
+        echo(term.move_yx(13, 29) + "~" * (43 + len(str(self.state.score))))
 
     def _run_game_step(self, term):
         old_player_coords, old_enemy_coords = self._get_old_coordinates()
@@ -53,18 +66,19 @@ class GameEngine:
         )
         time.sleep(0.2)
         while True:
-            current_item = items_list[user_position]
             user_command = self.command_handler.get_command()
-            if user_command == UserCommand.UP:
-                user_position = max(0, user_position - 1)
-            elif user_command == UserCommand.DOWN:
-                user_position = min(len(items_list) - 1, user_position + 1)
-            elif user_command == UserCommand.APPLY:
-                if current_item in self.state.hero.equipped:
-                    self.state.hero.unequip(current_item)
-                else:
-                    self.state.hero.equip(current_item)
-            elif user_command == UserCommand.OPEN_INVENTORY:
+            if len(items_list) > 0:
+                current_item = items_list[user_position]
+                if user_command == UserCommand.UP:
+                    user_position = max(0, user_position - 1)
+                elif user_command == UserCommand.DOWN:
+                    user_position = min(len(items_list) - 1, user_position + 1)
+                elif user_command == UserCommand.APPLY:
+                    if current_item in self.state.hero.equipped:
+                        self.state.hero.unequip(current_item)
+                    else:
+                        self.state.hero.equip(current_item)
+            if user_command == UserCommand.OPEN_INVENTORY:
                 break
             self._print_inventory(
                 term, items_list, user_position, items_in_menu, menu_slot_width
@@ -79,7 +93,10 @@ class GameEngine:
         self._clear_inventory(term, items_in_menu, menu_slot_width)
         view_start = user_position - user_position % items_in_menu
         view_end = min(view_start + items_in_menu, len(items_list))
-        echo(term.move_yx(24, 39) + f"Inventory: {view_start + 1}-{view_end + 1}")
+        if len(items_list) == 0:
+            echo(term.move_yx(24, 39) + "Inventory: 0")
+        else:
+            echo(term.move_yx(24, 39) + f"Inventory: {view_start + 1}-{view_end}")
         for i in range(0, view_end - view_start):
             current_position = view_start + i
             item_string = self._get_item_string_for_menu(items_list[current_position])[

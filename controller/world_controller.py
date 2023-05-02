@@ -1,16 +1,13 @@
 import time
 
-from controller.controller import Controller
-from state.state import State
-from generators.map_generator import MapGenerator
 import state.physical_object as po
+from controller.controller import Controller
+from generators.map_generator import MapGenerator
+from state.state import State
 
 
 class WorldController(Controller):
     def update_state(self, game_state: State):
-        if game_state.lives == 0:
-            self.handle_game_over(game_state)
-            return
         if not game_state.hero.is_alive:
             game_state.lives -= 1
             game_state.hero.resurrect_player()
@@ -26,21 +23,6 @@ class WorldController(Controller):
             self.handle_level_completion(game_state)
         elif isinstance(game_map[y][x], po.Door):
             self.handle_door_transition(game_state, x, y)
-
-    def handle_game_over(self, game_state):
-        time.sleep(1)
-        play_again = input("press enter to replay")
-        if play_again == "":
-            self.reset_game(game_state)
-        else:
-            time.sleep(1)
-            exit()
-
-    def reset_game(self, game_state):
-        game_state.current_level = 0
-        game_state.score = 0
-        game_state.lives = 5
-        self.new_level(game_state)
 
     def handle_level_completion(self, game_state):
         game_state.current_level += 1
