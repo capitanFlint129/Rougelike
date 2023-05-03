@@ -21,7 +21,7 @@ def test_actor_initialization():
     assert actor.equipped == set()
     assert actor.health == 10
     assert actor.power == 1
-    assert actor.is_alive == True
+    assert actor.is_alive is True
     assert actor.coordinates == Coordinates(1, 2)
     assert str(actor) == "@"
 
