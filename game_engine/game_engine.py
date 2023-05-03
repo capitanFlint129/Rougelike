@@ -69,8 +69,9 @@ class GameEngine:
                         self.state.hero.equip(current_item)
             if user_command == UserCommand.OPEN_INVENTORY:
                 break
-            self.gui.print_inventory(self.state, items_list, user_position)
-            time.sleep(0.2)
+            if user_command is not None:
+                self.gui.print_inventory(self.state, items_list, user_position)
+            time.sleep(0.1)
         self.gui.clear_inventory()
         time.sleep(0.1)
 
