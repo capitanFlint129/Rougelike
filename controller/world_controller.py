@@ -13,13 +13,13 @@ class WorldController(Controller):
             return
 
         x, y = game_state.hero.get_x(), game_state.hero.get_y()
-        game_map = game_state.game_map.get_map()
+        current_cell = game_state.game_map.get_object_at(x, y)
 
         if game_state.game_map.current_room_is_finale() and isinstance(
-            game_map[y][x], po.ExitPortal
+            current_cell, po.ExitPortal
         ):
             self.handle_level_completion(game_state)
-        elif isinstance(game_map[y][x], po.Door):
+        elif isinstance(current_cell, po.Door):
             self.handle_door_transition(game_state, x, y)
 
     def handle_level_completion(self, game_state):

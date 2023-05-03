@@ -40,9 +40,15 @@ class Room:
     def add_doors_to_room(self, door: GameObject):
         door_coordinates = {
             "top": [(0, self.width // 2), (0, self.width // 2 - 1)],
-            "bottom": [(self.height - 1, self.width // 2), (self.height - 1, self.width // 2 - 1)],
+            "bottom": [
+                (self.height - 1, self.width // 2),
+                (self.height - 1, self.width // 2 - 1),
+            ],
             "left": [(self.height // 2, 0), (self.height // 2 - 1, 0)],
-            "right": [(self.height // 2, self.width - 1), (self.height // 2 - 1, self.width - 1)]
+            "right": [
+                (self.height // 2, self.width - 1),
+                (self.height // 2 - 1, self.width - 1),
+            ],
         }
 
         for r, d in self.get_available_rooms().items():

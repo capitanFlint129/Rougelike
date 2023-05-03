@@ -35,15 +35,12 @@ def fill_room_from_file(room: Room, path: str):
 
 
 class MapGenerator:
-
     @staticmethod
     def generate_new_map(level=1) -> GameMap:
         def dfs(room: Room, visited: Set[Room]):
             visited.add(room)
             next_rooms = [
-                r
-                for r in room.get_available_rooms().keys()
-                if r not in visited
+                r for r in room.get_available_rooms().keys() if r not in visited
             ]
             if next_rooms:
                 MapGenerator._fill_room(room, level)
@@ -69,7 +66,7 @@ class MapGenerator:
         # points:
         # (1, 5)  (2, 8)  (3, 10) (4, 11) (5, 13)
         # (6, 14) (7, 14) (8, 15) (9, 15) (10, 16)
-        y = int(448.8 * (level ** 0.00102) - 443)
+        y = int(448.8 * (level**0.00102) - 443)
         rnd = random.randint(-1, 1)
         return y + rnd
 
