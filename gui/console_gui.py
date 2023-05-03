@@ -2,11 +2,6 @@ from functools import partial
 
 from blessed import Terminal
 
-
-class Gui:
-    pass
-
-
 echo = partial(print, end="", flush=True)
 echo("")
 
@@ -37,7 +32,7 @@ class ConsoleGui:
             echo(self.term.move_yx(24, 39) + f"Inventory: {view_start + 1}-{view_end}")
         for i in range(0, view_end - view_start):
             current_position = view_start + i
-            item_string = self.get_item_string_for_menu(state, items_list[current_position])[
+            item_string = self._get_item_string_for_menu(state, items_list[current_position])[
                           :self.menu_slot_width
                           ]
             if current_position == user_position:
@@ -48,16 +43,11 @@ class ConsoleGui:
         for i in range(self.items_in_menu + 1):
             echo(self.term.move_yx(24 + i, 39) + " " * self.menu_slot_width)
 
-    def get_item_string_for_menu(self, state, item):
+    @staticmethod
+    def _get_item_string_for_menu(state, item):
         if item in state.hero.equipped:
             return "[x] " + item.get_name()
         return "[ ] " + item.get_name()
-
-    def get_old_coordinates(self, state):
-        old_player_x, old_player_y = state.hero.get_x(), state.hero.get_y()
-        enemies = state.current_room.enemies
-        old_enemy_coordinates = [(enemy.get_y(), enemy.get_x()) for enemy in enemies]
-        return (old_player_x, old_player_y), old_enemy_coordinates
 
     def handle_room_change(self, state):
         echo(self.term.home + self.term.clear)
@@ -83,9 +73,9 @@ class ConsoleGui:
             x, y = enemy.get_x(), enemy.get_y()
             echo(self.term.move_yx(y, x) + enemy.get_icon(), end="")
 
-        self.print_status_bar(state, max_health)
+        self._print_status_bar(state, max_health)
 
-    def print_status_bar(self, state, max_health):
+    def _print_status_bar(self, state, max_health):
         echo(self.term.move_yx(24, 0) + "level: " + str(state.current_level), end="")
         echo(self.term.move_yx(24, 10) + "power: " + str(state.hero.power), end="")
         echo(self.term.move_yx(25, 10) + self._get_health_bar(state, max_health), end="")
