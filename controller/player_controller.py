@@ -18,7 +18,8 @@ class PlayerController(Controller):
         next_cell = game_state.game_map.get_object_at(next_x, next_y)
 
         self._handle_enemies(game_state, next_x, next_y)
-        self._handle_map_objects(game_state, next_x, next_y, next_cell)
+        if game_state.hero.coordinates != (next_x, next_y):
+            self._handle_map_objects(game_state, next_x, next_y, next_cell)
 
     def _get_next_coordinates(self, coordinates) -> Tuple:
         movement = {
