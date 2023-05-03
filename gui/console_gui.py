@@ -20,9 +20,7 @@ class ConsoleGui:
         )
         echo(self.term.move_yx(13, 13) + "~" * (33 + len(str(state.score))))
 
-    def print_inventory(
-            self, state, items_list, user_position
-    ):
+    def print_inventory(self, state, items_list, user_position):
         self.clear_inventory()
         view_start = user_position - user_position % self.items_in_menu
         view_end = min(view_start + self.items_in_menu, len(items_list))
@@ -32,9 +30,9 @@ class ConsoleGui:
             echo(self.term.move_yx(24, 39) + f"Inventory: {view_start + 1}-{view_end}")
         for i in range(0, view_end - view_start):
             current_position = view_start + i
-            item_string = self._get_item_string_for_menu(state, items_list[current_position])[
-                          :self.menu_slot_width
-                          ]
+            item_string = self._get_item_string_for_menu(
+                state, items_list[current_position]
+            )[: self.menu_slot_width]
             if current_position == user_position:
                 item_string = self.term.black_on_snow(item_string)
             echo(self.term.move_yx(25 + i, 39) + item_string)
@@ -78,7 +76,9 @@ class ConsoleGui:
     def _print_status_bar(self, state, max_health):
         echo(self.term.move_yx(24, 0) + "level: " + str(state.current_level), end="")
         echo(self.term.move_yx(24, 10) + "power: " + str(state.hero.power), end="")
-        echo(self.term.move_yx(25, 10) + self._get_health_bar(state, max_health), end="")
+        echo(
+            self.term.move_yx(25, 10) + self._get_health_bar(state, max_health), end=""
+        )
         echo(self.term.move_yx(26, 10) + "score: " + str(state.score), end="")
         echo(self.term.move_yx(27, 10) + "lives: " + ("♥" * state.lives), end="")
 
@@ -90,13 +90,13 @@ class ConsoleGui:
         num_bars = int(health_percent / 10)
         num_spaces = 10 - num_bars
         health_bar = (
-                "["
-                + ("|" * num_bars)
-                + (" " * num_spaces)
-                + "] "
-                + str(health_percent)
-                + "%"
-                + " " * 10
+            "["
+            + ("|" * num_bars)
+            + (" " * num_spaces)
+            + "] "
+            + str(health_percent)
+            + "%"
+            + " " * 10
         )
         return health_bar
 

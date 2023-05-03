@@ -12,11 +12,11 @@ echo("")
 
 class GameEngine:
     def __init__(
-            self,
-            state: State,
-            controllers: [Controller],
-            command_handler: CommandHandler,
-            gui: ConsoleGui,
+        self,
+        state: State,
+        controllers: [Controller],
+        command_handler: CommandHandler,
+        gui: ConsoleGui,
     ):
         self.state = state
         self.controllers = controllers
@@ -44,15 +44,15 @@ class GameEngine:
             old_enemy_coords = {}
             self.gui.handle_room_change(self.state)
 
-        self.gui.update_display(self.state, old_player_coords, old_enemy_coords, self.max_health)
+        self.gui.update_display(
+            self.state, old_player_coords, old_enemy_coords, self.max_health
+        )
         time.sleep(0.1)
 
     def _open_inventory(self):
         user_position = 0
         items_list = list(self.state.hero.inventory)
-        self.gui.print_inventory(
-            self.state, items_list, user_position
-        )
+        self.gui.print_inventory(self.state, items_list, user_position)
         time.sleep(0.2)
         while True:
             user_command = self.command_handler.get_command()
@@ -69,9 +69,7 @@ class GameEngine:
                         self.state.hero.equip(current_item)
             if user_command == UserCommand.OPEN_INVENTORY:
                 break
-            self.gui.print_inventory(
-                self.state, items_list, user_position
-            )
+            self.gui.print_inventory(self.state, items_list, user_position)
             time.sleep(0.2)
         self.gui.clear_inventory()
         time.sleep(0.1)
