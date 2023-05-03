@@ -48,7 +48,7 @@ class Actor(GameObject, ABC):
         self.coordinates.x = x
 
     def set_y(self, y):
-        self.coordinates.x = y
+        self.coordinates.y = y
 
     def move_to(self, x, y):
         self.coordinates.x = x
