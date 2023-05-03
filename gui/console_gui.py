@@ -18,12 +18,12 @@ class ConsoleGui:
         self.menu_slot_width = 30
 
     def show_game_over_message(self, state):
-        echo(self.term.move_yx(11, 13) + "~" * (37 + len(str(state.score))))
+        echo(self.term.move_yx(11, 13) + "~" * (33 + len(str(state.score))))
         echo(
             self.term.move_yx(12, 13)
-            + f"~Your score is {state.score}. Press enter to exit~"
+            + f"~Your score is {state.score}. Press e to exit~"
         )
-        echo(self.term.move_yx(13, 13) + "~" * (37 + len(str(state.score))))
+        echo(self.term.move_yx(13, 13) + "~" * (33 + len(str(state.score))))
 
     def print_inventory(
             self, state, items_list, user_position
