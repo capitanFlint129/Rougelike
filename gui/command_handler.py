@@ -27,5 +27,5 @@ class CommandHandler:
             return UserCommand.RIGHT
         elif keyboard.is_pressed("i"):
             return UserCommand.OPEN_INVENTORY
-        elif keyboard.is_pressed("enter"):
+        elif keyboard.is_pressed("e"):
             return UserCommand.APPLY
