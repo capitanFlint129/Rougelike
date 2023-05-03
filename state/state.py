@@ -8,7 +8,7 @@ class State:
         self.game_map: GameMap = GameMap(Room("0"), 1)
 
         # Player
-        self.hero = hero
+        self.hero: Hero = hero
 
         # Additional global state
         self.lives = 5

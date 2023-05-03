@@ -62,6 +62,8 @@ class GameMap:
         self.number_of_rooms = num_rooms
 
     def move(self, direction: str) -> Optional[str]:
+        if direction not in self.current_room.connections.keys():
+            return f"Cannot move in the {direction} direction."
         next_room = self.current_room.connections[direction]
         if next_room:
             self.current_room = next_room
