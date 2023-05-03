@@ -96,11 +96,11 @@ def test_move():
     starting_room.connect(room2, "left")
     game_map = GameMap(starting_room, 2)
 
-    assert game_map.move("left") is None
+    assert game_map.change_room("left") is None
     assert game_map.current_room == room2
-    assert game_map.move("right") is None
+    assert game_map.change_room("right") is None
     assert game_map.current_room == starting_room
-    assert game_map.move("invalid") == "Cannot move in the invalid direction."
+    assert game_map.change_room("invalid") == "Cannot move in the invalid direction."
 
 
 def test_add_room_to_current_room():

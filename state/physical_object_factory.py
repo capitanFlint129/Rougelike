@@ -3,6 +3,15 @@ from state.game_object import GameObject
 
 
 def get_physical_object(symb: str) -> GameObject:
+    """
+    Returns an instance of a subclass of "GameObject" that corresponds to the provided symbol.
+
+    Args:
+        symb: A string symbol that corresponds to a specific type of physical object.
+
+    Return:
+        An instance of a subclass of "GameObject" that corresponds to the provided symbol.
+    """
     if symb == "#":
         return po.Wall()
     if symb == " ":

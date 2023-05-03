@@ -7,6 +7,13 @@ from utils.coordinates import Coordinates
 
 
 class Actor(GameObject, ABC):
+    """
+    Represents a game character, such as a player or an enemy. Inherits from the GameObject class and the ABC module,
+    and includes methods for attacking other actors, managing the actor's inventory and equipped items,
+    and taking damage from attacks. The class has instance variables for the actor's inventory, equipped items, health,
+    power, and position on the game map. It provides methods to get and set the actor's position, and a "move_to"
+    method that updates the actor's position.
+    """
     def __init__(self, x, y):
         self.inventory: Set[Item] = set()
         self.equipped: Set[Item] = set()

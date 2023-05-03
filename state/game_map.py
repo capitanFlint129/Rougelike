@@ -5,6 +5,17 @@ from typing import List, Set, Optional, Dict
 
 
 class Room:
+    """
+    The game in question is presented in the form of a map consisting of connected rooms,
+    each of which is randomly generated except for the final room.
+    Each room is independent of the others and contains its own enemies and objects.
+    The state of the game is saved as the player progresses through the rooms.
+
+    This class represents a single room within the game. It includes instance variables for the room's map, enemies,
+    and items (inside map). The room can be connected to neighboring rooms,
+    and has a method for retrieving a dictionary of available rooms according to their direction.
+    """
+
     def __init__(self, name: str):
         self.width = 0
         self.height = 0
@@ -38,6 +49,17 @@ class Room:
         return available_rooms
 
     def add_doors_to_room(self, door: GameObject):
+        """
+        The "add_doors_to_room" method is used to add doors to a room in the game map.
+        Initially, the game map does not contain doors, so this method is required to add the necessary doors
+        that will lead the player to the next room.
+
+        Args:
+            door: GameObject that represents door
+
+        Return:
+            None
+        """
         door_coordinates = {
             "top": [(0, self.width // 2), (0, self.width // 2 - 1)],
             "bottom": [
@@ -57,11 +79,15 @@ class Room:
 
 
 class GameMap:
+    """
+    Represents the game map as a collection of connected rooms.
+    Responsible for providing data about the current game map, as well as for managing the change of the current room
+    """
     def __init__(self, starting_room: Room, num_rooms: int):
         self.current_room: Room = starting_room
         self.number_of_rooms = num_rooms
 
-    def move(self, direction: str) -> Optional[str]:
+    def change_room(self, direction: str) -> Optional[str]:
         if direction not in self.current_room.connections.keys():
             return f"Cannot move in the {direction} direction."
         next_room = self.current_room.connections[direction]

@@ -34,16 +34,16 @@ class WorldController(Controller):
         player = game_state.hero
         game_map = game_state.game_map
         if x == 0:
-            game_map.move("left")
+            game_map.change_room("left")
             player.move_to(width - 3, player.get_y())
         elif y == 0:
-            game_map.move("top")
+            game_map.change_room("top")
             player.move_to(player.get_x(), height - 3)
         elif y == height - 1:
-            game_map.move("bottom")
+            game_map.change_room("bottom")
             player.move_to(player.get_x(), 3)
         else:
-            game_map.move("right")
+            game_map.change_room("right")
             player.move_to(3, player.get_y())
 
         if game_map.current_room_is_finale():
