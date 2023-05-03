@@ -7,6 +7,13 @@ echo("")
 
 
 class ConsoleGui:
+    """
+    This is a class that handles the console graphical user interface of the game.
+    It includes methods for showing game over messages, displaying inventory items, handling changes between rooms,
+    and updating the game display.
+    The status bar of the game that displays the current level, player's power, health, score,
+    and lives.
+    """
     def __init__(self, term: Terminal):
         self.term = term
         self.items_in_menu = 3
