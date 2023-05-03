@@ -81,6 +81,6 @@ class GameEngine:
 
     def _get_old_coordinates(self):
         old_player_x, old_player_y = self.state.hero.get_x(), self.state.hero.get_y()
-        enemies = self.state.current_room.enemies
+        enemies = self.state.game_map.get_enemies()
         old_enemy_coordinates = [(enemy.get_y(), enemy.get_x()) for enemy in enemies]
         return (old_player_x, old_player_y), old_enemy_coordinates

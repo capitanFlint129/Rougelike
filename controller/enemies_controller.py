@@ -5,27 +5,27 @@ import state.physical_object as po
 
 class EnemiesController(Controller):
     def update_state(self, game_state: State):
-        enemies = game_state.current_room.enemies
+        enemies = game_state.game_map.get_enemies()
         player = game_state.hero
-        game_map = game_state.current_room.game_map
+        game_map = game_state.game_map.get_map()
 
         dead_enemies = set()
         for enemy in enemies:
             if not enemy.is_alive:
                 dead_enemies.add(enemy)
             else:
-                self._update_enemy_position(game_state, enemy)
+                self._update_enemy_position(player, enemy, game_map)
 
         self._remove_dead_enemies(enemies, dead_enemies)
 
-    def _update_enemy_position(self, game_state, enemy):
+    def _update_enemy_position(self, player, enemy, game_map):
         next_x, next_y = self._get_next_coordinates(
-            game_state.hero.coordinates, enemy.coordinates
+            player.coordinates, enemy.coordinates
         )
-        next_cell = game_state.current_room.game_map[next_y][next_x]
+        next_cell = game_map[next_y][next_x]
 
-        if game_state.hero.coordinates == (next_x, next_y):
-            enemy.attack(game_state.hero)
+        if player.coordinates == (next_x, next_y):
+            enemy.attack(player)
         elif not isinstance(next_cell, (po.Wall, po.MapBorder)):
             enemy.move_to(next_x, next_y)
 

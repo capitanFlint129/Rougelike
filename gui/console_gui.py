@@ -60,14 +60,14 @@ class ConsoleGui:
     def update_display(self, state, old_player_coords, old_enemy_coords, max_health):
         old_player_x, old_player_y = old_player_coords
         player_x, player_y = state.hero.get_x(), state.hero.get_y()
-        game_map = state.current_room.game_map
+        game_map = state.game_map.get_map()
 
         echo(self.term.move_yx(old_player_y, old_player_x) + " ", end="")
         echo(self.term.move_yx(player_y, player_x) + state.hero.get_icon(), end="")
 
         for (y, x) in old_enemy_coords:
             echo(self.term.move_yx(y, x) + game_map[y][x].get_icon(), end="")
-        for enemy in state.current_room.enemies:
+        for enemy in state.game_map.get_enemies():
             x, y = enemy.get_x(), enemy.get_y()
             echo(self.term.move_yx(y, x) + enemy.get_icon(), end="")
 
@@ -102,7 +102,7 @@ class ConsoleGui:
 
     @staticmethod
     def _echo_level(game_state):
-        for objects in game_state.current_room.game_map:
+        for objects in game_state.game_map.get_map():
             for object in objects:
                 echo(object.get_icon(), sep="")
             echo("\n")

@@ -1,11 +1,11 @@
 from state.hero import Hero
-from generators.map_generator import Room
+from state.game_map import GameMap, Room
 
 
 class State:
     def __init__(self, hero: Hero):
-        # current GameMap - room with enemies and items.
-        self.current_room: Room = Room("0")
+        # GameMap
+        self.game_map: GameMap = GameMap(Room("0"), 1)
 
         # Player
         self.hero = hero

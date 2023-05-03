@@ -1,5 +1,3 @@
-import time
-
 import state.physical_object as po
 from controller.controller import Controller
 from generators.map_generator import MapGenerator
@@ -15,9 +13,9 @@ class WorldController(Controller):
             return
 
         x, y = game_state.hero.get_x(), game_state.hero.get_y()
-        game_map = game_state.current_room.game_map
+        game_map = game_state.game_map.get_map()
 
-        if game_state.current_room.is_finale and isinstance(
+        if game_state.game_map.current_room_is_finale() and isinstance(
             game_map[y][x], po.ExitPortal
         ):
             self.handle_level_completion(game_state)
@@ -31,24 +29,24 @@ class WorldController(Controller):
 
     @staticmethod
     def handle_door_transition(game_state, x, y):
-        height = game_state.current_room.height
-        width = game_state.current_room.width
+        height = game_state.game_map.get_height()
+        width = game_state.game_map.get_width()
         player = game_state.hero
-
+        game_map = game_state.game_map
         if x == 0:
-            game_state.current_room = game_state.current_room.left
+            game_map.move("left")
             player.move_to(width - 3, player.get_y())
         elif y == 0:
-            game_state.current_room = game_state.current_room.top
+            game_map.move("top")
             player.move_to(player.get_x(), height - 3)
         elif y == height - 1:
-            game_state.current_room = game_state.current_room.bottom
+            game_map.move("bottom")
             player.move_to(player.get_x(), 3)
         else:
-            game_state.current_room = game_state.current_room.right
+            game_map.move("right")
             player.move_to(3, player.get_y())
 
-        if game_state.current_room.is_finale:
+        if game_map.current_room_is_finale():
             player.move_to(6, 3)
 
         game_state.room_changed = True
@@ -56,8 +54,6 @@ class WorldController(Controller):
     @staticmethod
     def new_level(game_state):
         game_state.room_changed = True
-        game_state.current_room = MapGenerator(
-            game_state.current_level
-        ).generate_new_map()
-        game_state.hero.set_x(game_state.current_room.height // 2)
-        game_state.hero.set_y(game_state.current_room.width // 2)
+        game_state.game_map = MapGenerator.generate_new_map(game_state.current_level)
+        game_state.hero.set_x(game_state.game_map.get_height() // 2)
+        game_state.hero.set_y(game_state.game_map.get_width() // 2)
