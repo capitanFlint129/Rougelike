@@ -1,9 +1,5 @@
 from state.game_object import GameObject
 
-"""
-    No comments
-"""
-
 
 class Wall(GameObject):
     def get_icon(self):

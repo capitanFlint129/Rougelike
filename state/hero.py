@@ -1,4 +1,4 @@
-from state.actor import Actor, Coordinates
+from state.actor import Actor
 
 
 class Hero(Actor):

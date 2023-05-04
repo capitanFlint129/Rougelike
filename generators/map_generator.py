@@ -1,8 +1,9 @@
 import random
-from typing import List, Set
+from typing import Set
+
+import state.physical_object as po
 from generators.enemy_generator import EnemyGenerator
 from generators.item_generator import ItemGenerator
-import state.physical_object as po
 from state.enemy import Enemy
 from state.item import Sword
 from state.game_map import GameMap, Room

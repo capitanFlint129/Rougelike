@@ -1,5 +1,6 @@
-from typing import Set, List
+from typing import List
 import random
+
 import state.item as items
 
 

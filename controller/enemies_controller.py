@@ -1,6 +1,6 @@
+import state.physical_object as po
 from controller.controller import Controller
 from state.state import State
-import state.physical_object as po
 
 
 class EnemiesController(Controller):
