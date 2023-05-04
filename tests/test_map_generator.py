@@ -23,7 +23,7 @@ def test_generate_corridor():
 
 def test_fill_room_from_file():
     room = Room("0")
-    fill_room_from_file(room, "../levels/test_level.txt")
+    fill_room_from_file(room, "./levels/test_level.txt")
     assert room.width > 0
     assert room.height > 0
     game_map = room.game_map

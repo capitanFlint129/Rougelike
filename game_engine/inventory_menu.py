@@ -10,6 +10,7 @@ class InventoryMenu:
     unequip items. The menu can be opened and closed with a specific key command, which is handled
     by the command_handler instance.
     """
+
     def __init__(self, state, gui, command_handler: CommandHandler):
         self.state = state
         self.gui = gui

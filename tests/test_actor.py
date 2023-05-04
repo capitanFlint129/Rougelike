@@ -6,7 +6,7 @@ from utils.coordinates import Coordinates
 from state.item import Item, Sword, Shield
 
 
-class TestActor(Actor, ABC):
+class ActorForTests(Actor, ABC):
     def get_icon(self):
         return "@"
 
@@ -15,7 +15,7 @@ class TestActor(Actor, ABC):
 
 
 def test_actor_initialization():
-    actor = TestActor(1, 2)
+    actor = ActorForTests(1, 2)
 
     assert actor.inventory == set()
     assert actor.equipped == set()
@@ -27,8 +27,8 @@ def test_actor_initialization():
 
 
 def test_actor_attack():
-    actor1 = TestActor(1, 2)
-    actor2 = TestActor(3, 4)
+    actor1 = ActorForTests(1, 2)
+    actor2 = ActorForTests(3, 4)
 
     actor1.attack(actor2)
 
@@ -36,7 +36,7 @@ def test_actor_attack():
 
 
 def test_actor_get_item():
-    actor = TestActor(1, 2)
+    actor = ActorForTests(1, 2)
     sword = Sword()
 
     actor.get_item(sword)
@@ -45,7 +45,7 @@ def test_actor_get_item():
 
 
 def test_actor_equip_unequip():
-    actor = TestActor(1, 2)
+    actor = ActorForTests(1, 2)
     sword = Sword()
 
     actor.get_item(sword)
@@ -59,7 +59,7 @@ def test_actor_equip_unequip():
 
 
 def test_actor_get_damage():
-    actor = TestActor(1, 2)
+    actor = ActorForTests(1, 2)
     shield = Shield()
 
     actor.get_item(shield)
@@ -77,7 +77,7 @@ def test_actor_get_damage():
 
 
 def test_actor_coordinates():
-    actor = TestActor(1, 2)
+    actor = ActorForTests(1, 2)
 
     assert actor.get_x() == 1
     assert actor.get_y() == 2

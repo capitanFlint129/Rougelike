@@ -74,7 +74,7 @@ def test_game_engine_open_inventory(
     )
 
     with patch("time.sleep", return_value=None):
-        game_engine._open_inventory()
+        game_engine.inventory_menu.open()
 
     assert mock_gui.print_inventory.call_count == 2
     mock_gui.clear_inventory.assert_called_once()
