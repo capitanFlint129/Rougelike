@@ -14,7 +14,12 @@ def test_room_initialization():
     assert room.height == 0
     assert room.name == "test_room"
     assert room.type is None
-    assert room.connections == {"left": None, "right": None, "top": None, "bottom": None}
+    assert room.connections == {
+        "left": None,
+        "right": None,
+        "top": None,
+        "bottom": None,
+    }
     assert room.game_map == []
     assert room.enemies == set()
     assert room.is_finale is False
@@ -141,7 +146,9 @@ def test_set_object_at():
     starting_room = Room("starting_room")
     starting_room.width = 10
     starting_room.height = 10
-    starting_room.game_map = [[None for _ in range(starting_room.width)] for _ in range(starting_room.height)]
+    starting_room.game_map = [
+        [None for _ in range(starting_room.width)] for _ in range(starting_room.height)
+    ]
 
     game_object = Door()
     game_map = GameMap(starting_room, 1)

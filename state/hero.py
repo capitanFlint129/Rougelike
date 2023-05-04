@@ -5,6 +5,7 @@ class Hero(Actor):
     """
     Player
     """
+
     def __init__(self, x=6, y=3):
         super(Hero, self).__init__(x, y)
         self.power = 5

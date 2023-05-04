@@ -14,6 +14,7 @@ class GameEngine:
     """
     Runs the main game loop that updates the game state, applies controllers and displays the game on the console.
     """
+
     def __init__(
         self,
         state: State,

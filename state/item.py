@@ -8,6 +8,7 @@ class Item(GameObject):
     The "Item" class is a subclass of "GameObject" that represents an item within the game.
     It is an abstract class that has abstract methods for obtaining the attack and armor bonuses of the item.
     """
+
     @abstractmethod
     def attack_bonus(self):
         pass
@@ -21,6 +22,7 @@ class Sword(Item):
     """
     Me beat stronger!
     """
+
     def get_icon(self):
         return "|"
 
@@ -38,6 +40,7 @@ class Shield(Item):
     """
     Me defend better!!
     """
+
     def get_icon(self):
         return "["
 

@@ -27,9 +27,13 @@ def mock_gui():
     return MagicMock()
 
 
-def test_game_engine_run_game_over(mock_state, mock_controllers, mock_command_handler, mock_gui):
+def test_game_engine_run_game_over(
+    mock_state, mock_controllers, mock_command_handler, mock_gui
+):
     mock_state.lives = 0
-    game_engine = GameEngine(mock_state, mock_controllers, mock_command_handler, mock_gui)
+    game_engine = GameEngine(
+        mock_state, mock_controllers, mock_command_handler, mock_gui
+    )
     mock_command_handler.get_command.side_effect = [None, UserCommand.APPLY]
     with patch("time.sleep", return_value=None):
         game_engine.run()
@@ -38,12 +42,16 @@ def test_game_engine_run_game_over(mock_state, mock_controllers, mock_command_ha
     mock_command_handler.get_command.assert_called()
 
 
-def test_game_engine_run_game_step(mock_state, mock_controllers, mock_command_handler, mock_gui):
+def test_game_engine_run_game_step(
+    mock_state, mock_controllers, mock_command_handler, mock_gui
+):
     mock_state.lives = 1
     mock_state.hero.health = 100
     mock_state.room_changed = False
     mock_command_handler.get_command.return_value = None
-    game_engine = GameEngine(mock_state, mock_controllers, mock_command_handler, mock_gui)
+    game_engine = GameEngine(
+        mock_state, mock_controllers, mock_command_handler, mock_gui
+    )
 
     with patch("time.sleep", return_value=None):
         game_engine._run_game_step()
@@ -53,10 +61,17 @@ def test_game_engine_run_game_step(mock_state, mock_controllers, mock_command_ha
     mock_gui.update_display.assert_called_once()
 
 
-def test_game_engine_open_inventory(mock_state, mock_controllers, mock_command_handler, mock_gui):
+def test_game_engine_open_inventory(
+    mock_state, mock_controllers, mock_command_handler, mock_gui
+):
     mock_state.hero.inventory = {1, 2, 3}
-    mock_command_handler.get_command.side_effect = [UserCommand.UP, UserCommand.OPEN_INVENTORY]
-    game_engine = GameEngine(mock_state, mock_controllers, mock_command_handler, mock_gui)
+    mock_command_handler.get_command.side_effect = [
+        UserCommand.UP,
+        UserCommand.OPEN_INVENTORY,
+    ]
+    game_engine = GameEngine(
+        mock_state, mock_controllers, mock_command_handler, mock_gui
+    )
 
     with patch("time.sleep", return_value=None):
         game_engine._open_inventory()

@@ -14,6 +14,7 @@ class Actor(GameObject, ABC):
     power, and position on the game map. It provides methods to get and set the actor's position, and a "move_to"
     method that updates the actor's position.
     """
+
     def __init__(self, x, y):
         self.inventory: Set[Item] = set()
         self.equipped: Set[Item] = set()

@@ -83,6 +83,7 @@ class GameMap:
     Represents the game map as a collection of connected rooms.
     Responsible for providing data about the current game map, as well as for managing the change of the current room
     """
+
     def __init__(self, starting_room: Room, num_rooms: int):
         self.current_room: Room = starting_room
         self.number_of_rooms = num_rooms

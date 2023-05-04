@@ -7,6 +7,7 @@ class GameObject(ABC):
     The class has abstract methods for getting the object's icon and name, which are used to print the object.
     The class also has a string representation method that returns the object's icon.
     """
+
     @abstractmethod
     def get_icon(self):
         pass

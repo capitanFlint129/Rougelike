@@ -6,6 +6,7 @@ from state.hero import Hero
 import state.physical_object as po
 from utils.coordinates import Coordinates
 
+
 @pytest.fixture
 def mock_game_state():
     game_state = MagicMock()

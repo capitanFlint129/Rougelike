@@ -1,7 +1,13 @@
 import pytest
 import random
 from unittest.mock import MagicMock
-from generators.map_generator import MapGenerator, EnemyGenerator, ItemGenerator, generate_corridor, fill_room_from_file
+from generators.map_generator import (
+    MapGenerator,
+    EnemyGenerator,
+    ItemGenerator,
+    generate_corridor,
+    fill_room_from_file,
+)
 from state.game_map import GameMap, Room
 from state.item import Sword, Shield
 import state.physical_object as po
@@ -21,10 +27,18 @@ def test_fill_room_from_file():
     assert room.width > 0
     assert room.height > 0
     game_map = room.game_map
-    expected_objects \
-        = [po.Wall, po.FreeSpace, po.MapBorder, po.Coin,
-           po.Thorn, po.Thorn, po.Thorn, po.Thorn,
-           po.ExitPortal, po.Wall]
+    expected_objects = [
+        po.Wall,
+        po.FreeSpace,
+        po.MapBorder,
+        po.Coin,
+        po.Thorn,
+        po.Thorn,
+        po.Thorn,
+        po.Thorn,
+        po.ExitPortal,
+        po.Wall,
+    ]
     for i, expected_object in enumerate(expected_objects):
         assert isinstance(game_map[0][i], expected_object)
 

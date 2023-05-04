@@ -70,6 +70,7 @@ class EnemiesController(Controller):
         Returns:
             Tuple[int, int]: The next coordinates for the enemy to move to.
         """
+
         def sign(x):
             return -1 if x < 0 else (1 if x > 0 else 0)
 
@@ -92,4 +93,3 @@ class EnemiesController(Controller):
         """
         for dead_enemy in dead_enemies:
             enemies.discard(dead_enemy)
-

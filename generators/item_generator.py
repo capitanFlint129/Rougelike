@@ -8,6 +8,7 @@ class ItemGenerator:
     Generate Items on the map.
     TODO: rewrite the generation algorithm in the future
     """
+
     @staticmethod
     def generate_items(level: int, map_array: List) -> None:
         x = random.randint(3, len(map_array[0]) - 3)

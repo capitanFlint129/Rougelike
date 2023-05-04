@@ -22,14 +22,18 @@ def mock_game_state():
     return state
 
 
-def test_player_controller_update_state_no_command(mock_command_handler, mock_game_state):
+def test_player_controller_update_state_no_command(
+    mock_command_handler, mock_game_state
+):
     player_controller = PlayerController(mock_command_handler)
     player_controller.update_state(mock_game_state)
 
     mock_game_state.hero.move_to.assert_not_called()
 
 
-def test_player_controller_update_state_valid_command(mock_command_handler, mock_game_state):
+def test_player_controller_update_state_valid_command(
+    mock_command_handler, mock_game_state
+):
     player_controller = PlayerController(mock_command_handler)
     mock_command_handler.get_command.return_value = UserCommand.RIGHT
 

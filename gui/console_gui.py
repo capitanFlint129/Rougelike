@@ -14,6 +14,7 @@ class ConsoleGui:
     The status bar of the game that displays the current level, player's power, health, score,
     and lives.
     """
+
     def __init__(self, term: Terminal):
         self.term = term
         self.items_in_menu = 3

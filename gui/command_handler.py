@@ -7,6 +7,7 @@ class UserCommand(Enum):
     """
     An enumeration that defines all possible user commands in the game, including movement and menu commands.
     """
+
     # Movement
     UP = 1
     DOWN = 2
@@ -24,6 +25,7 @@ class CommandHandler:
     Methods:
         get_command: Returns the user command based on the currently pressed keyboard keys.
     """
+
     @staticmethod
     def get_command() -> UserCommand:
         if keyboard.is_pressed("w"):

@@ -8,6 +8,7 @@ class Enemy(Actor):
     "get_name" methods to provide the enemy's visual representation and name. The class also overrides the "equip" and
     "get_item" methods to prevent the enemy from equipping or picking up items.
     """
+
     def __init__(self, x=60, y=17):
         super(Enemy, self).__init__(x, y)
 

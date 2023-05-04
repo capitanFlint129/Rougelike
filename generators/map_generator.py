@@ -44,6 +44,7 @@ class MapGenerator:
     The number of rooms generated is based on a curve-fitting formula, which takes the level as input and returns
     a random number of rooms.
     """
+
     @staticmethod
     def generate_new_map(level=1) -> GameMap:
         def dfs(room: Room, visited: Set[Room]):

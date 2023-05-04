@@ -13,7 +13,9 @@ def mock_game_state():
     game_state = MagicMock()
     game_state.hero = MagicMock(spec=Hero)
     game_state.hero.coordinates = Coordinates(5, 5)
-    game_state.game_map.get_map.return_value = [[po.FreeSpace() for _ in range(10)] for _ in range(10)]
+    game_state.game_map.get_map.return_value = [
+        [po.FreeSpace() for _ in range(10)] for _ in range(10)
+    ]
     return game_state
 
 

@@ -14,6 +14,7 @@ class State:
         room_changed (bool): A boolean that tracks whether the current room has changed.
         current_level (int): The current level of the game.
     """
+
     def __init__(self, hero: Hero):
         self.game_map: GameMap = GameMap(Room("0"), 1)
         self.hero: Hero = hero
