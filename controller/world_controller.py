@@ -85,5 +85,5 @@ class WorldController(Controller):
         """
         game_state.room_changed = True
         game_state.game_map = MapGenerator.generate_new_map(game_state.current_level)
-        game_state.hero.set_x(game_state.game_map.get_height() // 2)
-        game_state.hero.set_y(game_state.game_map.get_width() // 2)
+        game_state.hero.set_x(game_state.game_map.get_width() // 2)
+        game_state.hero.set_y(game_state.game_map.get_height() // 2)
