@@ -11,6 +11,9 @@ echo("")
 
 
 class GameEngine:
+    """
+    Runs the main game loop that updates the game state, applies controllers and displays the game on the console.
+    """
     def __init__(
         self,
         state: State,
@@ -18,6 +21,15 @@ class GameEngine:
         command_handler: CommandHandler,
         gui: ConsoleGui,
     ):
+        """
+        Initializes the GameEngine instance.
+
+        Args:
+            state: The initial game state.
+            controllers: The list of controllers that update the game state.
+            command_handler: The handler that maps user keyboard input to game commands.
+            gui: The console GUI that displays the game state on the console.
+        """
         self.state = state
         self.controllers = controllers
         self.max_health = self.state.hero.health
@@ -25,6 +37,9 @@ class GameEngine:
         self.gui = gui
 
     def run(self):
+        """
+        Runs the main game loop that updates the game state, applies controllers and displays the game on the console.
+        """
         while True:
             if self.command_handler.get_command() == UserCommand.OPEN_INVENTORY:
                 self._open_inventory()
@@ -37,6 +52,9 @@ class GameEngine:
                 return
 
     def _run_game_step(self):
+        """
+        Runs one step of the game loop, which updates the game state and displays it on the console.
+        """
         old_player_coords, old_enemy_coords = self._get_old_coordinates()
         self._apply_controllers()
 
@@ -50,6 +68,9 @@ class GameEngine:
         time.sleep(0.1)
 
     def _open_inventory(self):
+        """
+        Displays the inventory menu on the console and handles user input for equipping and unequipping items.
+        """
         user_position = 0
         items_list = list(self.state.hero.inventory)
         self.gui.print_inventory(self.state, items_list, user_position)
@@ -76,10 +97,19 @@ class GameEngine:
         time.sleep(0.1)
 
     def _apply_controllers(self):
+        """
+        Updates the game state using the registered controllers.
+        """
         for controller in self.controllers:
             controller.update_state(self.state)
 
     def _get_old_coordinates(self):
+        """
+        Returns the old player and enemy coordinates.
+
+        Returns:
+            A tuple containing the old player coordinates and a list of old enemy coordinates.
+        """
         old_player_x, old_player_y = self.state.hero.get_x(), self.state.hero.get_y()
         enemies = self.state.game_map.get_enemies()
         old_enemy_coordinates = [(enemy.get_y(), enemy.get_x()) for enemy in enemies]

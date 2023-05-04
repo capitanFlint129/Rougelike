@@ -5,7 +5,17 @@ from state.state import State
 
 
 class WorldController(Controller):
+    """
+    Controller for handling the game world state.
+    """
+
     def update_state(self, game_state: State):
+        """
+        Updates the game state and the current game map based on the current state of the game.
+
+        Args:
+            game_state (State): The current state of the game.
+        """
         if not game_state.hero.is_alive:
             game_state.lives -= 1
             game_state.hero.resurrect_player()
@@ -23,12 +33,26 @@ class WorldController(Controller):
             self.handle_door_transition(game_state, x, y)
 
     def handle_level_completion(self, game_state):
+        """
+        Handles the completion of a level, updates the game state and sets the hero's new location.
+
+        Args:
+            game_state (State): The current state of the game.
+        """
         game_state.current_level += 1
         game_state.hero.move_to(5, 5)
         self.new_level(game_state)
 
     @staticmethod
     def handle_door_transition(game_state, x, y):
+        """
+        Handles a door transition, changing the current game map and hero's location based on the location of the door.
+
+        Args:
+            game_state (State): The current state of the game.
+            x (int): The x-coordinate of the door.
+            y (int): The y-coordinate of the door.
+        """
         height = game_state.game_map.get_height()
         width = game_state.game_map.get_width()
         player = game_state.hero
@@ -53,6 +77,12 @@ class WorldController(Controller):
 
     @staticmethod
     def new_level(game_state):
+        """
+        Generates a new level for the game.
+
+        Args:
+            game_state (State): The current state of the game.
+        """
         game_state.room_changed = True
         game_state.game_map = MapGenerator.generate_new_map(game_state.current_level)
         game_state.hero.set_x(game_state.game_map.get_height() // 2)

@@ -35,6 +35,15 @@ def fill_room_from_file(room: Room, path: str):
 
 
 class MapGenerator:
+    """
+    The MapGenerator class generates a GameMap with specific levels, where the map is a corridor with rooms,
+    each with two exits. The method generate_new_map takes an optional level parameter and returns a new GameMap object.
+    The method first generates a root room, and then performs a depth-first search to connect it to the other rooms,
+    using the _fill_room method to populate each room with enemies and items.
+    The last room in the map is generated with the _fill_final_room method and is marked as the finale.
+    The number of rooms generated is based on a curve-fitting formula, which takes the level as input and returns
+    a random number of rooms.
+    """
     @staticmethod
     def generate_new_map(level=1) -> GameMap:
         def dfs(room: Room, visited: Set[Room]):
