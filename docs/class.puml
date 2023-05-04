@@ -1,15 +1,11 @@
 @startuml
 skinparam style strictuml
 
-"<<interface>>\nGui"  <- GameEngine
+ConsoleGui  <-- GameEngine
 
-interface "<<interface>>\nGui" {
-+drawState(State)
-+drawInventory(items)
-}
-
-ConsoleGui -|> "<<interface>>\nGui"
 class ConsoleGui {
++updateDisplay()
++printInventory()
 }
 
 class CommandsHandler {
@@ -17,7 +13,6 @@ class CommandsHandler {
 }
 
 class GameEngine {
-'-inventoryMenuOpened
 +run()
 }
 
@@ -32,6 +27,10 @@ abstract class GameObject {
 +getName()
 }
 
+EnemyController ..> GameObject
+PlayerController ..> GameObject
+WorldController ..> GameObject
+
 GameObject <|-- Actor
 GameObject <|-- Item
 abstract class Item {
@@ -39,21 +38,28 @@ abstract class Item {
 
 
 
-State --> Item
-Item <|-- Weapon
-class Weapon {
+Item <|-- Sword
+class Sword {
+}
+Item <|-- Shield
+class Shield {
 }
 
 'abstract class GameObject {
 '}
 
-'GameObject <|-- Actor
 abstract class Actor {
 -attack
 -health
--inventory
-+getAttack()
-+applyDamage(integer)
+-inventory : Items[0..*]
++attack(actor)
++getItem(item: Item)
++equip(item: Item)
++getDamage(damage)
++getX()
++setX(x)
++getY()
++setY(y)
 }
 
 
@@ -64,8 +70,7 @@ interface "<<interface>>\nController" {
 
 "<<interface>>\nController" <|.. EnemyController
 EnemyController ..> State
-EnemyController ---> Enemy
-EnemyController ...> Destination
+EnemyController ...> Enemy
 class EnemyController {
 }
 
@@ -77,69 +82,70 @@ class WorldController {
 
 "<<interface>>\nController" <|.. PlayerController
 PlayerController ..> State
-PlayerController --> Actor
+PlayerController ..> Hero
+PlayerController ..> Enemy
 class PlayerController {
 }
 CommandsHandler <- PlayerController
 
 
-GameEngine --> InventoryMenu
-InventoryMenu --> Actor
+GameEngine -> InventoryMenu
+InventoryMenu ..> Actor
 InventoryMenu --> CommandsHandler
-InventoryMenu --> "<<interface>>\nGui"
-ConsoleGui ---> GameObject
+InventoryMenu ..> ConsoleGui
+ConsoleGui ...> GameObject
 class InventoryMenu {
++open()
 }
 
-State --> Actor
 
-Actor <|-- Player
-class Player {
+Actor <|-- Hero
+class Hero {
 }
 
-Item <. Actor
 
 Actor <|-- Enemy
 abstract class Enemy {
-+move(currentPosition, playerPosition)
-}
-
-Enemy ..> Destination
-class Destination {
-+coordinateX
-+coordinateY
-}
-
-Enemy <|-- Ghost
-class Ghost {
 }
 
 class State {
--map
++hero : Hero
++lives : Integer
++score : Integer
++currentLevel: Integer
 }
+State --> GameMap
 
 
-class AssetManager {
-}
 
-WorldController --> ItemGenerator
-WorldController --> EnemyGenerator
-WorldController --> MapGenerator
-MapGenerator --> AssetManager
+WorldController ..> MapGenerator
 
 class ItemGenerator {
 +generateItems()
 }
-'ItemGenerator ..> Item
-ItemGenerator --> AssetManager
+ItemGenerator ..> Item
 
 class EnemyGenerator {
 +generateEnemies()
 }
-'EnemyGenerator ..> Enemy
-EnemyGenerator --> AssetManager
+EnemyGenerator ..> Enemy
 class MapGenerator {
 +generateRoom()
+}
+MapGenerator --> EnemyGenerator
+MapGenerator --> ItemGenerator
+
+class GameMap {
++changeRoom(direction):
++getEnemies():
++getObjectAt(x, y):
++setObjectAt(x, y, obj:GameObject):
+}
+GameMap --> Room
+
+class Room {
++connect(room, direction)
++addDoors(door:GameObject)
 }
 
 @enduml

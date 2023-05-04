@@ -8,7 +8,7 @@ participant ConsoleGui
 participant CommandsHandler
 participant GameEngine
 participant PlayerController
-participant Player
+participant Hero
 participant EnemiesController
 participant Enemy
 participant WorldController
@@ -36,11 +36,11 @@ deactivate CommandsHandler
 PlayerController -> State : get attacked enemy
 activate State
 deactivate State
-PlayerController -> Player : get attack
-activate Player
-deactivate Player
-PlayerController -> Enemy : apply damage
+PlayerController -> Hero : attack enemy
+activate Hero
+Hero -> Enemy : apply damage
 activate Enemy
+deactivate Hero
 deactivate Enemy
 deactivate PlayerController
 
@@ -49,11 +49,14 @@ activate EnemiesController
 EnemiesController -> State : get player position
 activate State
 deactivate State
-loop
-EnemiesController -> Enemy : get move destination
+loop for each enemy
+EnemiesController -> Enemy : update enemy position
 activate Enemy
 deactivate Enemy
-EnemiesController -> State : set new position
+EnemiesController -> State : update enemy position
+activate State
+deactivate State
+EnemiesController -> State : remove dead enemies
 activate State
 deactivate State
 end
@@ -62,7 +65,7 @@ GameEngine -> WorldController : updateState
 activate WorldController
 WorldController -> WorldController : checking that player\nhas activated the door
 
-GameEngine -> ConsoleGui : drawState()
+GameEngine -> ConsoleGui : updateDisplay()
 activate ConsoleGui
 ConsoleGui -> User
 
