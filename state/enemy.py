@@ -1,5 +1,9 @@
+import random
+
 from state.actor import Actor
 from state.item import Item
+from utils.coordinates import Coordinates
+import state.enemy_strategy as es
 
 
 class Enemy(Actor):
@@ -11,6 +15,7 @@ class Enemy(Actor):
 
     def __init__(self, x=60, y=17):
         super(Enemy, self).__init__(x, y)
+        self.movement_strategy = es.EnemyContex()
 
     def get_icon(self):
         return "*"
@@ -23,3 +28,45 @@ class Enemy(Actor):
 
     def get_item(self, item: Item):
         pass
+
+    def enemy_experience(self) -> int:
+        return random.randint(1, 2)
+
+    def move(self, player_coordinates: Coordinates) -> Coordinates:
+        return self.movement_strategy.move(self.coordinates, player_coordinates)
+
+
+class AggressiveEnemy(Enemy):
+    def __init__(self, x=60, y=17):
+        super().__init__(x, y)
+        self.movement_strategy.set_strategy(es.AggressiveEnemyStrategy())
+
+    def get_icon(self):
+        return "A"
+
+    def get_name(self):
+        return "Aggressor"
+
+
+class DefensiveEnemy(Enemy):
+    def __init__(self, x=60, y=17):
+        super().__init__(x, y)
+        self.movement_strategy.set_strategy(es.PassiveEnemyStrategy())
+
+    def get_icon(self):
+        return "D"
+
+    def get_name(self):
+        return "Defender"
+
+
+class CautiousEnemy(Enemy):
+    def __init__(self, x=60, y=17):
+        super().__init__(x, y)
+        self.movement_strategy.set_strategy(es.CowardlyEnemyStrategy())
+
+    def get_icon(self):
+        return "C"
+
+    def get_name(self):
+        return "Cautious One"

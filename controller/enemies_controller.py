@@ -48,36 +48,13 @@ class EnemiesController(Controller):
         Returns:
             None
         """
-        next_x, next_y = self._get_next_coordinates(
-            player.coordinates, enemy.coordinates
-        )
+        next_x, next_y = enemy.move(player.coordinates)
         next_cell = game_map[next_y][next_x]
 
         if player.coordinates == (next_x, next_y):
             enemy.attack(player)
         elif not isinstance(next_cell, (po.Wall, po.MapBorder)):
             enemy.move_to(next_x, next_y)
-
-    @staticmethod
-    def _get_next_coordinates(player_coordinates, enemy_coordinates):
-        """
-        Calculates the next coordinates for the enemy to move to in order to get closer to the player.
-
-        Args:
-            player_coordinates (Tuple[int, int]): The coordinates of the player.
-            enemy_coordinates (Tuple[int, int]): The coordinates of the enemy.
-
-        Returns:
-            Tuple[int, int]: The next coordinates for the enemy to move to.
-        """
-
-        def sign(x):
-            return -1 if x < 0 else (1 if x > 0 else 0)
-
-        dx = sign(player_coordinates.x - enemy_coordinates.x)
-        dy = sign(player_coordinates.y - enemy_coordinates.y)
-
-        return enemy_coordinates.x + dx, enemy_coordinates.y + dy
 
     @staticmethod
     def _remove_dead_enemies(enemies, dead_enemies):

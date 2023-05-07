@@ -4,7 +4,7 @@ from typing import Set
 import state.physical_object as po
 from generators.enemy_generator import EnemyGenerator
 from generators.item_generator import ItemGenerator
-from state.enemy import Enemy
+from state.enemy import Enemy, AggressiveEnemy
 from state.item import Sword
 from state.game_map import GameMap, Room
 from state.physical_object_factory import get_physical_object
@@ -90,6 +90,6 @@ class MapGenerator:
     @staticmethod
     def _fill_final_room(room: Room, level=1):
         fill_room_from_file(room, f"levels/level_{level}.txt")
-        room.enemies = {Enemy(60, 17)}
+        room.enemies = {AggressiveEnemy(60, 17)}
         room.game_map[20][10] = Sword()
         room.is_finale = True
