@@ -63,7 +63,6 @@ class MapGenerator:
         number_of_rooms = MapGenerator._get_count_rooms(level)
         root = MapGenerator._generate_rooms(number_of_rooms)
         dfs(root, set())
-
         return GameMap(root, number_of_rooms)
 
     @staticmethod

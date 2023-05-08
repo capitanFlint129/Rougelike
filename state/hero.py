@@ -1,5 +1,9 @@
+from typing import List
+
 from state.actor import Actor
 from state.enemy import Enemy
+import state.ability as abilities
+from utils.coordinates import Coordinates
 
 
 class Hero(Actor):
@@ -10,7 +14,9 @@ class Hero(Actor):
     def __init__(self, x=6, y=3):
         super(Hero, self).__init__(x, y)
         self.experience = 0
-        self.power = 5
+        self.power = 1
+        self.abilities: List[abilities.Ability] = []
+        self.abilities.append(abilities.ConfuseAbility(self))
 
     def get_icon(self):
         return "O"
@@ -22,6 +28,9 @@ class Hero(Actor):
         super().attack(actor)
         if isinstance(actor, Enemy) and not actor.is_alive:
             self.get_experience(actor.enemy_experience())
+        else:
+            for ability in self.abilities:
+                ability.spell_ability(actor)
 
     def get_experience(self, exp: int):
         self.experience += exp

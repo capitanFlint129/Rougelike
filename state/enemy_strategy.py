@@ -2,21 +2,15 @@ from utils.coordinates import Coordinates
 
 
 class EnemyStrategy:
-
     def get_next_coordinates(
-            self,
-            enemy_coordinates: Coordinates,
-            player_coordinates: Coordinates
+        self, enemy_coordinates: Coordinates, player_coordinates: Coordinates
     ) -> Coordinates:
         pass
 
 
 class AggressiveEnemyStrategy(EnemyStrategy):
-
     def get_next_coordinates(
-            self,
-            enemy_coordinates: Coordinates,
-            player_coordinates: Coordinates
+        self, enemy_coordinates: Coordinates, player_coordinates: Coordinates
     ) -> Coordinates:
         def sign(x):
             return -1 if x < 0 else (1 if x > 0 else 0)
@@ -29,18 +23,14 @@ class AggressiveEnemyStrategy(EnemyStrategy):
 
 class PassiveEnemyStrategy(EnemyStrategy):
     def get_next_coordinates(
-            self,
-            enemy_coordinates: Coordinates,
-            player_coordinates: Coordinates
+        self, enemy_coordinates: Coordinates, player_coordinates: Coordinates
     ) -> Coordinates:
         return enemy_coordinates
 
 
 class CowardlyEnemyStrategy(EnemyStrategy):
     def get_next_coordinates(
-            self,
-            enemy_coordinates: Coordinates,
-            player_coordinates: Coordinates
+        self, enemy_coordinates: Coordinates, player_coordinates: Coordinates
     ) -> Coordinates:
         if enemy_coordinates.distance(player_coordinates) >= 8:
             return enemy_coordinates
@@ -55,16 +45,13 @@ class CowardlyEnemyStrategy(EnemyStrategy):
 
 
 class EnemyMovement:
-
-    def __init__(self, strategy = None):
+    def __init__(self, strategy=None):
         self.strategy = strategy
 
     def set_strategy(self, strategy: EnemyStrategy):
         self.strategy = strategy
 
     def move(
-            self,
-            enemy_coordinates: Coordinates,
-            player_coordinates: Coordinates
+        self, enemy_coordinates: Coordinates, player_coordinates: Coordinates
     ) -> Coordinates:
         return self.strategy.get_next_coordinates(enemy_coordinates, player_coordinates)

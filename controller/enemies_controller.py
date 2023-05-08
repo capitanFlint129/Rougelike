@@ -23,32 +23,31 @@ class EnemiesController(Controller):
             None
         """
         enemies = game_state.game_map.get_enemies()
-        player = game_state.hero
-        game_map = game_state.game_map.get_map()
 
         dead_enemies = set()
         for enemy in enemies:
             if not enemy.is_alive:
                 dead_enemies.add(enemy)
             else:
-                self._update_enemy_position(player, enemy, game_map)
+                self._update_enemy_position(enemy, game_state)
 
         self._remove_dead_enemies(enemies, dead_enemies)
 
-    def _update_enemy_position(self, player, enemy, game_map):
+    def _update_enemy_position(self, enemy, game_state: State):
         """
         Updates the position of an enemy in the game by checking if the player is nearby and if not, moves the enemy in
         the direction of the player if possible.
 
         Args:
-            player (Hero): The player character.
             enemy (Enemy): The enemy character.
-            game_map (List[List[GameObject]]): The current state of the game map.
+            game_state (State): The current state of the game.
 
         Returns:
             None
         """
-        next_x, next_y = enemy.move(player.coordinates)
+        game_map = game_state.game_map.get_map()
+        player = game_state.hero
+        next_x, next_y = enemy.move(game_state)
         next_cell = game_map[next_y][next_x]
 
         if player.coordinates == (next_x, next_y):

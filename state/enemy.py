@@ -1,5 +1,3 @@
-import random
-
 from state.actor import Actor
 from state.item import Item
 from utils.coordinates import Coordinates
@@ -32,7 +30,8 @@ class Enemy(Actor):
     def enemy_experience(self) -> int:
         pass
 
-    def move(self, player_coordinates: Coordinates) -> Coordinates:
+    def move(self, game_state) -> Coordinates:
+        player_coordinates = game_state.hero.coordinates
         return self.movement_strategy.move(self.coordinates, player_coordinates)
 
 
