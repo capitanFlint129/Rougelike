@@ -54,7 +54,7 @@ class CowardlyEnemyStrategy(EnemyStrategy):
         return Coordinates(enemy_coordinates.x - dx, enemy_coordinates.y - dy)
 
 
-class EnemyContex:
+class EnemyMovement:
 
     def __init__(self, strategy = None):
         self.strategy = strategy

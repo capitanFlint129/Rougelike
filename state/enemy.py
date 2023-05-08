@@ -15,7 +15,7 @@ class Enemy(Actor):
 
     def __init__(self, x=60, y=17):
         super(Enemy, self).__init__(x, y)
-        self.movement_strategy = es.EnemyContex()
+        self.movement_strategy = es.EnemyMovement()
 
     def get_icon(self):
         return "*"
@@ -30,7 +30,7 @@ class Enemy(Actor):
         pass
 
     def enemy_experience(self) -> int:
-        return random.randint(1, 2)
+        pass
 
     def move(self, player_coordinates: Coordinates) -> Coordinates:
         return self.movement_strategy.move(self.coordinates, player_coordinates)
@@ -47,6 +47,9 @@ class AggressiveEnemy(Enemy):
     def get_name(self):
         return "Aggressor"
 
+    def enemy_experience(self) -> int:
+        return 2
+
 
 class DefensiveEnemy(Enemy):
     def __init__(self, x=60, y=17):
@@ -59,6 +62,9 @@ class DefensiveEnemy(Enemy):
     def get_name(self):
         return "Defender"
 
+    def enemy_experience(self) -> int:
+        return 1
+
 
 class CautiousEnemy(Enemy):
     def __init__(self, x=60, y=17):
@@ -70,3 +76,6 @@ class CautiousEnemy(Enemy):
 
     def get_name(self):
         return "Cautious One"
+
+    def enemy_experience(self) -> int:
+        return 1
