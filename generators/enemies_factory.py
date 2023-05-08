@@ -29,8 +29,8 @@ class FantasyEnemyFactory(EnemyFactory):
 
 class SciFiEnemyFactory(EnemyFactory):
     def create_enemies(self, level: int, map_array: List[List[GameObject]]) -> Set[Enemy]:
-        x = len(map_array[0]) // 2
-        y = len(map_array) // 2
+        x = len(map_array[0]) // 2 - 2
+        y = len(map_array) // 2 - 2
         enemies_dict = {
             0: CyborgChainsaw,
             1: LaserShark,
