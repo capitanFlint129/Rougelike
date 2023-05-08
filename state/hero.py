@@ -42,3 +42,5 @@ class Hero(Actor):
     def resurrect_player(self):
         self.health = 10
         self.is_alive = True
+        self.inventory = set()
+        self.equipped = set()

@@ -48,7 +48,7 @@ class EnemiesController(Controller):
         game_map = game_state.game_map.get_map()
         player = game_state.hero
         next_x, next_y = enemy.move(game_state)
-        next_cell = game_map[next_y][next_x]
+        next_cell = game_state.game_map.get_object_at(next_x, next_y)
 
         if player.coordinates == (next_x, next_y):
             enemy.attack(player)
