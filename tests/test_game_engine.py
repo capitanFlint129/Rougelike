@@ -3,7 +3,7 @@ from unittest.mock import MagicMock, patch
 from game_engine.game_engine import GameEngine
 from state.state import State
 from gui.command_handler import CommandHandler, UserCommand
-from gui.console_gui import ConsoleGui
+from gui.console_gui import ConsoleGUI
 from controller.controller import Controller
 
 

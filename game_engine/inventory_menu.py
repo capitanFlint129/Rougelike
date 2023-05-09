@@ -16,8 +16,10 @@ class InventoryMenu:
         self.state = state
         self.gui = gui
         self.command_handler = command_handler
+        self.is_open = False
 
     def open(self):
+        self.is_open = True
         user_position = 0
         items_list = list(self.state.hero.inventory)
         self.gui.print_inventory(self.state, items_list, user_position)
@@ -41,4 +43,5 @@ class InventoryMenu:
                 self.gui.print_inventory(self.state, items_list, user_position)
             time.sleep(0.1)
         self.gui.clear_inventory()
+        self.is_open = False
         time.sleep(0.1)
