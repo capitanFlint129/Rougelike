@@ -22,16 +22,21 @@ class EnemiesController(Controller):
         Returns:
             None
         """
-        enemies = game_state.game_map.get_enemies()
+
+        # some creatures can be cloned during the update, thereby adding new enemy to the set.
+        # Without copying, we cannot iterate over the mutable object.
+        # TODO: any ideas? it seems to be bad
+        original_enemies = game_state.game_map.get_enemies()
+        copy_enemies = {enemy for enemy in original_enemies}
 
         dead_enemies = set()
-        for enemy in enemies:
+        for enemy in copy_enemies:
             if not enemy.is_alive:
                 dead_enemies.add(enemy)
             else:
                 self._update_enemy_position(enemy, game_state)
 
-        self._remove_dead_enemies(enemies, dead_enemies)
+        self._remove_dead_enemies(original_enemies, dead_enemies)
 
     def _update_enemy_position(self, enemy, game_state: State):
         """
@@ -45,14 +50,13 @@ class EnemiesController(Controller):
         Returns:
             None
         """
-        game_map = game_state.game_map.get_map()
         player = game_state.hero
-        next_x, next_y = enemy.move(game_state)
+        next_x, next_y = enemy.update(game_state)
         next_cell = game_state.game_map.get_object_at(next_x, next_y)
 
         if player.coordinates == (next_x, next_y):
             enemy.attack(player)
-        elif not isinstance(next_cell, (po.Wall, po.MapBorder)):
+        elif isinstance(next_cell, po.FreeSpace):
             enemy.move_to(next_x, next_y)
 
     @staticmethod

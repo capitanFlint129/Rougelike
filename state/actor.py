@@ -66,5 +66,5 @@ class Actor(GameObject, ABC):
         self.coordinates.x = x
         self.coordinates.y = y
 
-    def move(self, game_state) -> Coordinates:
+    def update(self, game_state) -> Coordinates:
         return self.coordinates

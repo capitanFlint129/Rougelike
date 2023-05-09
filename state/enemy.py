@@ -1,7 +1,10 @@
+import random
+from abc import ABC, abstractmethod
 from state.actor import Actor
 from state.item import Item
 from utils.coordinates import Coordinates
 import state.enemy_strategy as es
+import copy
 
 
 class Enemy(Actor):
@@ -30,9 +33,15 @@ class Enemy(Actor):
     def enemy_experience(self) -> int:
         pass
 
-    def move(self, game_state) -> Coordinates:
+    def update(self, game_state) -> Coordinates:
         player_coordinates = game_state.hero.coordinates
         return self.movement_strategy.move(self.coordinates, player_coordinates)
+
+
+class CloneableEnemy(Enemy):
+
+    def clone(self, coordinates):
+        pass
 
 
 """
@@ -129,7 +138,7 @@ class CyborgChainsaw(Enemy):
         return 2
 
 
-class LaserShark(Enemy):
+class LaserShark(CloneableEnemy):
     """
     Laser Shark: An advanced, genetically-engineered shark armed with laser weaponry on its dorsal fin.
     It aggressively hunts down any intruders in its territory, unleashing devastating energy beams to subdue its prey.
@@ -138,6 +147,7 @@ class LaserShark(Enemy):
     def __init__(self, x=60, y=17):
         super().__init__(x, y)
         self.movement_strategy.set_strategy(es.AggressiveEnemyStrategy())
+        self.cloning_probability = 0.05
 
     def get_icon(self):
         return "L"
@@ -147,6 +157,31 @@ class LaserShark(Enemy):
 
     def enemy_experience(self) -> int:
         return 2
+
+    def clone(self, coordinates=None):
+        if coordinates is None:
+            coordinates = self.coordinates
+        new_laser_shark = copy.deepcopy(self)
+        new_laser_shark.coordinates = coordinates
+        return new_laser_shark
+
+    def update(self, game_state) -> Coordinates:
+        new_coordinates = super().update(game_state)
+        if random.random() < self.cloning_probability:
+            x, y = self.coordinates
+            available_position = []
+            game_map = game_state.game_map
+            for i in range(-1, 2):
+                for j in range(-1, 2):
+                    if i == j == 0:
+                        continue
+                    if game_map.get_object_at(x + i, y + j).get_icon() == ' ':
+                        available_position.append(Coordinates(x + i, y + j))
+            if available_position:
+                self.cloning_probability = self.cloning_probability * 0.5
+                copy_laser_shark = self.clone(available_position[random.randint(0, len(available_position)) - 1])
+                game_state.game_map.get_enemies().add(copy_laser_shark)
+        return new_coordinates
 
 
 class BioShields(Enemy):

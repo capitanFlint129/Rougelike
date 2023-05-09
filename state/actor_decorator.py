@@ -13,8 +13,8 @@ class ActorDecorator(Actor, ABC):
     def get_icon(self):
         return super().get_icon()
 
-    def move(self, game_state) -> Coordinates:
-        return super().move(game_state)
+    def update(self, game_state) -> Coordinates:
+        return super().update(game_state)
 
     def get_decorated_actor(self):
         return self.decorated_actor
@@ -27,7 +27,7 @@ class ConfusedActorDecorator(ActorDecorator, ABC):
     def get_name(self):
         return self.decorated_actor.get_name()
 
-    def move(self, player_coordinates: Coordinates) -> Coordinates:
+    def update(self, player_coordinates: Coordinates) -> Coordinates:
         dx = random.randint(-1, 1)
         dy = random.randint(-1, 1)
         return Coordinates(self.coordinates.x + dx, self.coordinates.y + dy)
