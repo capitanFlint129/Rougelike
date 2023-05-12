@@ -35,14 +35,14 @@ class ConsoleGUI:
             echo(self.term.move_yx(24, 39) + "Inventory: 0")
         else:
             echo(self.term.move_yx(24, 39) + f"Inventory: {view_start + 1}-{view_end}")
-        for i in range(0, view_end - view_start):
-            current_position = view_start + i
-            item_string = self._get_item_string_for_menu(
-                menu_state, items_list[current_position]
-            )[: self.menu_slot_width]
-            if current_position == user_position:
-                item_string = self.term.black_on_snow(item_string)
-            echo(self.term.move_yx(25 + i, 39) + item_string)
+            for i in range(0, view_end - view_start):
+                current_position = view_start + i
+                item_string = self._get_item_string_for_menu(
+                    menu_state, items_list[current_position]
+                )[: self.menu_slot_width]
+                if current_position == user_position:
+                    item_string = self.term.black_on_snow(item_string)
+                echo(self.term.move_yx(25 + i, 39) + item_string)
 
     def clear_inventory(self):
         for i in range(self.items_in_menu + 1):

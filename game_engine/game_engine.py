@@ -53,6 +53,7 @@ class GameEngine:
                     command = self.command_handler.get_command()
                     if command is not None:
                         command.execute(self.state)
+                        return
                     else:
                         time.sleep(0.1)
 

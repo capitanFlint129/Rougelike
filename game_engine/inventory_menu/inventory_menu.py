@@ -26,8 +26,8 @@ class InventoryMenu:
         time.sleep(0.2)
         while menu_state.is_open:
             command = self.command_handler.get_command()
-            command.execute(menu_state)
             if command is not None:
+                command.execute(menu_state)
                 self.gui.print_inventory(menu_state)
             time.sleep(0.1)
         self.gui.clear_inventory()
