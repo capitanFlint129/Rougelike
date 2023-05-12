@@ -2,10 +2,9 @@ import time
 from functools import partial
 
 from controller.controller import Controller
-from gui.command_handler import CommandHandler, UserCommand
+from gui.command_handler import GameEngineCommandHandler
 from gui.console_gui import ConsoleGUI
 from state.state import State
-from game_engine.inventory_menu import InventoryMenu
 
 echo = partial(print, end="", flush=True)
 echo("")
@@ -20,7 +19,7 @@ class GameEngine:
         self,
         state: State,
         controllers: [Controller],
-        command_handler: CommandHandler,
+        command_handler: GameEngineCommandHandler,
         gui: ConsoleGUI,
     ):
         """
@@ -37,22 +36,25 @@ class GameEngine:
         self.max_health = self.state.hero.health
         self.command_handler = command_handler
         self.gui = gui
-        self.inventory_menu = InventoryMenu(self.state, self.gui, self.command_handler)
 
     def run(self):
         """
         Runs the main game loop that updates the game state, applies controllers and displays the game on the console.
         """
         while True:
-            if self.command_handler.get_command() == UserCommand.OPEN_INVENTORY:
-                self.inventory_menu.open()
+            command = self.command_handler.get_command()
+            if command is not None:
+                command.execute(self.state)
             else:
                 self._run_game_step()
             if self.state.lives == 0:
                 self.gui.show_game_over_message(self.state.score)
-                while self.command_handler.get_command() != UserCommand.APPLY:
-                    time.sleep(0.1)
-                return
+                while True:
+                    command = self.command_handler.get_command()
+                    if command is not None:
+                        command.execute(self.state)
+                    else:
+                        time.sleep(0.1)
 
     def _run_game_step(self):
         """

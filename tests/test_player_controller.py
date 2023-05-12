@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import MagicMock
 from controller.player_controller import PlayerController
-from gui.command_handler import CommandHandler, UserCommand
+from gui.command_handler import CommandHandler
 import state.physical_object as po
 from state.item import Item
 from utils.coordinates import Coordinates

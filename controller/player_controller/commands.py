@@ -1,39 +1,35 @@
+from abc import ABC, abstractmethod
 from typing import Tuple
 
-from controller.controller import Controller
-from gui.command_handler import CommandHandler, UserCommand
+import state.physical_object as po
 from state.enemy import Enemy
 from state.game_object import GameObject
-from state.state import State
 from state.item import Item
-import state.physical_object as po
+from state.state import State
 
 
-class PlayerController(Controller):
-    """
-    This class represents the controller for the player character in the game.
-    It handles the player's movements and interactions with the game objects.
-    """
+class PlayerControllerCommandsFactory:
+    def create_command_up(self):
+        return GameCommandUp()
 
-    def __init__(self, command_handler: CommandHandler):
-        self.command_handler = command_handler
+    def create_command_down(self):
+        return GameCommandDown()
 
-    def update_state(self, game_state: State):
-        """
-        Updates the game state based on the player's actions.
+    def create_command_left(self):
+        return GameCommandLeft()
 
-        Args:
-            game_state (State): The current state of the game.
+    def create_command_right(self):
+        return GameCommandRight()
 
-        Return:
-            None
-        """
-        next_x, next_y = self._get_next_coordinates(game_state.hero.coordinates)
-        next_cell = game_state.game_map.get_object_at(next_x, next_y)
 
-        enemy_attacked = self._handle_enemies(game_state, next_x, next_y)
-        if not enemy_attacked and game_state.hero.coordinates != (next_x, next_y):
-            self._handle_map_objects(game_state, next_x, next_y, next_cell)
+class GameCommand(ABC):
+    def execute(self, state: State):
+        next_x, next_y = self._get_next_coordinates(state.hero.coordinates)
+        next_cell = state.game_map.get_object_at(next_x, next_y)
+
+        enemy_attacked = self._handle_enemies(state, next_x, next_y)
+        if not enemy_attacked and state.hero.coordinates != (next_x, next_y):
+            self._handle_map_objects(state, next_x, next_y, next_cell)
 
     def _get_next_coordinates(self, coordinates) -> Tuple:
         """
@@ -45,18 +41,12 @@ class PlayerController(Controller):
         Return:
             Tuple[int, int]: The next coordinates of the player character.
         """
-        movement = {
-            UserCommand.DOWN: (1, 0),
-            UserCommand.UP: (-1, 0),
-            UserCommand.RIGHT: (0, 1),
-            UserCommand.LEFT: (0, -1),
-        }
-        command = self.command_handler.get_command()
-        if command in movement:
-            dy, dx = movement[command]
-            return coordinates.x + dx, coordinates.y + dy
+        dy, dx = self._get_movement()
+        return coordinates.x + dx, coordinates.y + dy
 
-        return coordinates.x, coordinates.y
+    @abstractmethod
+    def _get_movement(self):
+        pass
 
     @staticmethod
     def _handle_enemies(game_state: State, next_x: int, next_y: int) -> bool:
@@ -101,3 +91,23 @@ class PlayerController(Controller):
         elif isinstance(next_cell, Item):
             game_state.hero.inventory.add(next_cell)
             game_state.game_map.set_object_at(next_x, next_y, po.FreeSpace())
+
+
+class GameCommandUp(GameCommand):
+    def _get_movement(self):
+        return -1, 0
+
+
+class GameCommandDown(GameCommand):
+    def _get_movement(self):
+        return 1, 0
+
+
+class GameCommandLeft(GameCommand):
+    def _get_movement(self):
+        return 0, -1
+
+
+class GameCommandRight(GameCommand):
+    def _get_movement(self):
+        return 0, 1
