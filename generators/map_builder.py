@@ -11,7 +11,6 @@ from generators.item_generator import ItemGenerator
 
 
 class MapBuilderInterface(ABC):
-
     def __init__(self, level: int = 1):
         self.room = Room("")
         self.level = level
@@ -41,11 +40,14 @@ class MapBuilderInterface(ABC):
 class RandomMapBuilder(MapBuilderInterface):
     def generate_map(self, width: int, height: int):
         self.room = Room("")
-        game_map = [['#' if random.randint(0, 100) == 0 else ' ' for _ in range(width)] for _ in range(height)]
-        game_map[height - 1] = game_map[0] = ['#' for _ in range(width)]
+        game_map = [
+            ["#" if random.randint(0, 100) == 0 else " " for _ in range(width)]
+            for _ in range(height)
+        ]
+        game_map[height - 1] = game_map[0] = ["#" for _ in range(width)]
 
         for i in range(height):
-            game_map[i][0] = game_map[i][width - 1] = '#'
+            game_map[i][0] = game_map[i][width - 1] = "#"
 
         game_map = [[get_physical_object(c) for c in row] for row in game_map]
         self.room.game_map = game_map

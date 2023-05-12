@@ -1,9 +1,7 @@
-from state.enemy import Enemy
-from state.game_object import GameObject
-
 from typing import List, Set, Optional, Dict
 
-from state.hero import Hero
+from state.enemy import Enemy
+from state.game_object import GameObject
 
 
 class Room:

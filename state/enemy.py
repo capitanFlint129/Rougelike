@@ -39,7 +39,6 @@ class Enemy(Actor):
 
 
 class CloneableEnemy(Enemy):
-
     def clone(self, coordinates):
         pass
 
@@ -175,11 +174,13 @@ class LaserShark(CloneableEnemy):
                 for j in range(-1, 2):
                     if i == j == 0:
                         continue
-                    if game_map.get_object_at(x + i, y + j).get_icon() == ' ':
+                    if game_map.get_object_at(x + i, y + j).get_icon() == " ":
                         available_position.append(Coordinates(x + i, y + j))
             if available_position:
                 self.cloning_probability = self.cloning_probability * 0.5
-                copy_laser_shark = self.clone(available_position[random.randint(0, len(available_position)) - 1])
+                copy_laser_shark = self.clone(
+                    available_position[random.randint(0, len(available_position)) - 1]
+                )
                 game_state.game_map.get_enemies().add(copy_laser_shark)
         return new_coordinates
 
