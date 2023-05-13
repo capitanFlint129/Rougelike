@@ -1,8 +1,6 @@
-import pytest
 import random
 from unittest.mock import MagicMock
 from generators.map_generator import (
-    MapGenerator,
     EnemyGenerator,
     ItemGenerator,
     generate_corridor,

@@ -1,7 +1,7 @@
+import random
 from unittest.mock import MagicMock
 
 from state.actor_decorator import ConfusedActorDecorator
-from utils.coordinates import Coordinates
 
 
 def test_init():
@@ -28,7 +28,8 @@ def test_move_confused():
     actor.coordinates = MagicMock()
     actor.coordinates.x = 1
     actor.coordinates.y = 2
+    random.randint = MagicMock(return_value=1)
     decorator = ConfusedActorDecorator(actor)
-    new_coordinates = decorator.move(Coordinates(2, 3))
+    new_coordinates = decorator.move(None)
     assert abs(new_coordinates.x - actor.coordinates.x) <= 1
     assert abs(new_coordinates.y - actor.coordinates.y) <= 1
