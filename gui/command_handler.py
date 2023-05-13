@@ -15,15 +15,15 @@ class PlayerControllerCommandHandler:
         get_command: Returns the user command based on the currently pressed keyboard keys.
     """
 
-    def get_command(self) -> Optional[GameCommand]:
+    def get_command(self) -> Optional[PlayerControllerCommand]:
         if keyboard.is_pressed("w"):
-            return GameCommandUp()
+            return PlayerControllerCommandUp()
         elif keyboard.is_pressed("s"):
-            return GameCommandDown()
+            return PlayerControllerCommandDown()
         elif keyboard.is_pressed("a"):
-            return GameCommandLeft()
+            return PlayerControllerCommandLeft()
         elif keyboard.is_pressed("d"):
-            return GameCommandRight()
+            return PlayerControllerCommandRight()
         return None
 
 

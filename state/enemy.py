@@ -151,7 +151,7 @@ class ShieldspikeTurtles(Enemy):
 
     def __init__(self, x=60, y=17):
         super().__init__(x, y)
-        self.movement_strategy.set_strategy(es.PassiveEnemyStrategy())
+        self.movement.set_state(es.PassiveEnemyState())
 
     def get_icon(self):
         return "S"

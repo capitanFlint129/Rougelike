@@ -1,6 +1,6 @@
 import pytest
 from unittest.mock import MagicMock
-from controller.enemies_controller import EnemiesController
+from controller import EnemiesController
 from state.state import State
 from state.hero import Hero
 from state.enemy import Enemy

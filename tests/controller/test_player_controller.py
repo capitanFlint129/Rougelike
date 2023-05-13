@@ -1,7 +1,13 @@
 import pytest
 from unittest.mock import MagicMock
 from controller.player_controller import PlayerController
-from gui.command_handler import CommandHandler
+from gui.command_handler import PlayerControllerCommandHandler
+from controller.player_controller.commands import (
+    PlayerControllerCommandUp,
+    PlayerControllerCommandDown,
+    PlayerControllerCommandLeft,
+    PlayerControllerCommandRight,
+)
 import state.physical_object as po
 from state.item import Item
 from utils.coordinates import Coordinates
@@ -9,7 +15,7 @@ from utils.coordinates import Coordinates
 
 @pytest.fixture
 def mock_command_handler():
-    ch = MagicMock(spec=CommandHandler)
+    ch = MagicMock(spec=PlayerControllerCommandHandler)
     ch.get_command.return_value = None
     return ch
 
@@ -35,16 +41,27 @@ def test_player_controller_update_state_valid_command(
     mock_command_handler, mock_game_state
 ):
     player_controller = PlayerController(mock_command_handler)
-    mock_command_handler.get_command.return_value = UserCommand.RIGHT
+    mock_command_handler.get_command.return_value = PlayerControllerCommandRight()
 
     player_controller.update_state(mock_game_state)
 
     mock_game_state.hero.move_to.assert_called_once_with(6, 5)
 
 
+def test_player_controller_update_state_valid_command_left(
+    mock_command_handler, mock_game_state
+):
+    player_controller = PlayerController(mock_command_handler)
+    mock_command_handler.get_command.return_value = PlayerControllerCommandLeft()
+
+    player_controller.update_state(mock_game_state)
+
+    mock_game_state.hero.move_to.assert_called_once_with(4, 5)
+
+
 def test_player_controller_update_state_wall(mock_command_handler, mock_game_state):
     player_controller = PlayerController(mock_command_handler)
-    mock_command_handler.get_command.return_value = UserCommand.UP
+    mock_command_handler.get_command.return_value = PlayerControllerCommandUp()
     mock_game_state.game_map.get_object_at.return_value = po.Wall()
 
     player_controller.update_state(mock_game_state)
@@ -54,7 +71,7 @@ def test_player_controller_update_state_wall(mock_command_handler, mock_game_sta
 
 def test_player_controller_update_state_item(mock_command_handler, mock_game_state):
     player_controller = PlayerController(mock_command_handler)
-    mock_command_handler.get_command.return_value = UserCommand.DOWN
+    mock_command_handler.get_command.return_value = PlayerControllerCommandDown()
     item = MagicMock(spec=Item)
     mock_game_state.game_map.get_object_at.return_value = item
 

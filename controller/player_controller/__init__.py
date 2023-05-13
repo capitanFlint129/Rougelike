@@ -1,8 +1,8 @@
 from controller.player_controller.commands import (
-    GameCommand,
-    GameCommandRight,
-    GameCommandLeft,
-    GameCommandDown,
-    GameCommandUp,
+    PlayerControllerCommand,
+    PlayerControllerCommandRight,
+    PlayerControllerCommandLeft,
+    PlayerControllerCommandDown,
+    PlayerControllerCommandUp,
 )
 from controller.player_controller.player_controller import PlayerController

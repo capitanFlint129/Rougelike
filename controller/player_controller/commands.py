@@ -10,19 +10,19 @@ from state.state import State
 
 class PlayerControllerCommandsFactory:
     def create_command_up(self):
-        return GameCommandUp()
+        return PlayerControllerCommandUp()
 
     def create_command_down(self):
-        return GameCommandDown()
+        return PlayerControllerCommandDown()
 
     def create_command_left(self):
-        return GameCommandLeft()
+        return PlayerControllerCommandLeft()
 
     def create_command_right(self):
-        return GameCommandRight()
+        return PlayerControllerCommandRight()
 
 
-class GameCommand(ABC):
+class PlayerControllerCommand(ABC):
     def execute(self, state: State):
         next_x, next_y = self._get_next_coordinates(state.hero.coordinates)
         next_cell = state.game_map.get_object_at(next_x, next_y)
@@ -93,21 +93,21 @@ class GameCommand(ABC):
             game_state.game_map.set_object_at(next_x, next_y, po.FreeSpace())
 
 
-class GameCommandUp(GameCommand):
+class PlayerControllerCommandUp(PlayerControllerCommand):
     def _get_movement(self):
         return -1, 0
 
 
-class GameCommandDown(GameCommand):
+class PlayerControllerCommandDown(PlayerControllerCommand):
     def _get_movement(self):
         return 1, 0
 
 
-class GameCommandLeft(GameCommand):
+class PlayerControllerCommandLeft(PlayerControllerCommand):
     def _get_movement(self):
         return 0, -1
 
 
-class GameCommandRight(GameCommand):
+class PlayerControllerCommandRight(PlayerControllerCommand):
     def _get_movement(self):
         return 0, 1
