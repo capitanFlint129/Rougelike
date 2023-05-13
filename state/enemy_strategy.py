@@ -41,6 +41,11 @@ class PassiveEnemyStrategy(EnemyStrategy):
 
 
 class PassiveAttackEnemyStrategy(EnemyStrategy):
+    """
+    A class for implementing the passive strategy of the
+    enemy, with attacks on neighboring cells
+    """
+
     def get_next_coordinates(
         self, enemy_coordinates: Coordinates, player_coordinates: Coordinates
     ) -> Coordinates:
