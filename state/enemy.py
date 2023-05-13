@@ -58,8 +58,6 @@ class Enemy(Actor):
 
 
 class CloneableEnemy(Enemy):
-    def clone(self, coordinates):
-        pass
     def __init__(self, x, y):
         super().__init__(x, y)
         self.cloning_probability = 0.5
@@ -152,7 +150,7 @@ class DemonSword(Enemy):
     def __init__(self, x=60, y=17):
         super().__init__(x, y)
         self.power = 100
-        self.movement.set_state(es.PassiveAttackEnemyStrategy())
+        self.movement.set_state(es.PassiveAttackEnemyState())
 
     def get_icon(self):
         return "|"
@@ -198,7 +196,7 @@ class CyborgChainsaw(Enemy):
 
     def __init__(self, x=60, y=17):
         super().__init__(x, y)
-        self.movement_strategy.set_strategy(es.AggressiveEnemyStrategy())
+        self.movement.set_state(es.AggressiveEnemyState())
 
     def get_icon(self):
         return "W"
@@ -219,7 +217,7 @@ class PoisonousMold(CloneableEnemy):
         super().__init__(x, y)
         self.health = 100
         self.power = 1
-        self.movement.set_state(es.PassiveAttackEnemyStrategy())
+        self.movement.set_state(es.PassiveAttackEnemyState())
         self.cloning_probability = 0.5
 
     def get_icon(self):

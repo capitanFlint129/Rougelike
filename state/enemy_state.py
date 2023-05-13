@@ -6,14 +6,14 @@ from utils.coordinates import Coordinates
 class EnemyState(ABC):
     @abstractmethod
     def get_next_coordinates(
-        self, enemy_coordinates: Coordinates, player_coordinates: Coordinates
+            self, enemy_coordinates: Coordinates, player_coordinates: Coordinates
     ) -> Coordinates:
         pass
 
 
 class AggressiveEnemyState(EnemyState):
     def get_next_coordinates(
-        self, enemy_coordinates: Coordinates, player_coordinates: Coordinates
+            self, enemy_coordinates: Coordinates, player_coordinates: Coordinates
     ) -> Coordinates:
         def sign(x):
             return -1 if x < 0 else (1 if x > 0 else 0)
@@ -26,14 +26,23 @@ class AggressiveEnemyState(EnemyState):
 
 class PassiveEnemyState(EnemyState):
     def get_next_coordinates(
-        self, enemy_coordinates: Coordinates, player_coordinates: Coordinates
+            self, enemy_coordinates: Coordinates, player_coordinates: Coordinates
     ) -> Coordinates:
+        return enemy_coordinates
+
+
+class PassiveAttackEnemyState(EnemyState):
+    def get_next_coordinates(
+            self, enemy_coordinates: Coordinates, player_coordinates: Coordinates
+    ) -> Coordinates:
+        if enemy_coordinates.distance(player_coordinates) == 1:
+            return player_coordinates
         return enemy_coordinates
 
 
 class CowardlyEnemyState(EnemyState):
     def get_next_coordinates(
-        self, enemy_coordinates: Coordinates, player_coordinates: Coordinates
+            self, enemy_coordinates: Coordinates, player_coordinates: Coordinates
     ) -> Coordinates:
         if enemy_coordinates.distance(player_coordinates) >= 8:
             return enemy_coordinates
@@ -55,6 +64,6 @@ class EnemyMovement:
         self.state = strategy
 
     def move(
-        self, enemy_coordinates: Coordinates, player_coordinates: Coordinates
+            self, enemy_coordinates: Coordinates, player_coordinates: Coordinates
     ) -> Coordinates:
         return self.state.get_next_coordinates(enemy_coordinates, player_coordinates)
