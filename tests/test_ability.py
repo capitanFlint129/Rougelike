@@ -1,9 +1,6 @@
-import pytest
 from unittest.mock import MagicMock
 
-from state.actor import Actor
-from state.actor_decorator import ActorDecorator, ConfusedActorDecorator
-from state.enemy import Enemy
+from state.actor_decorator import ConfusedActorDecorator
 
 
 def test_init():
@@ -19,14 +16,7 @@ def test_get_icon():
     assert decorator.get_icon() == "A"
 
 
-def test_move():
-    actor = MagicMock()
-    actor.move.return_value = (1, 2)
-    decorator = ConfusedActorDecorator(actor)
-    assert decorator.move(None) == (1, 2)
-
-
-def test_get_icon():
+def test_get_icon_confused():
     actor = MagicMock()
     decorator = ConfusedActorDecorator(actor)
     assert decorator.get_icon() == "z"
@@ -39,7 +29,7 @@ def test_get_name():
     assert decorator.get_name() == "Goblin"
 
 
-def test_move():
+def test_move_confused():
     actor = MagicMock()
     actor.coordinates = MagicMock()
     actor.coordinates.x = 1
