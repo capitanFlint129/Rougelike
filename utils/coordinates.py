@@ -43,4 +43,4 @@ class Coordinates:
             raise ValueError("Argument must be of type Coordinates.")
         x_diff = self.x - other.x
         y_diff = self.y - other.y
-        return (x_diff ** 2 + y_diff ** 2) ** 0.5
+        return (x_diff**2 + y_diff**2) ** 0.5
