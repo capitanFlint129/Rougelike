@@ -27,7 +27,7 @@ class ConfusedActorDecorator(ActorDecorator, ABC):
     def get_name(self):
         return self.decorated_actor.get_name()
 
-    def update(self, player_coordinates: Coordinates) -> Coordinates:
+    def update(self, game_state) -> Coordinates:
         dx = random.randint(-1, 1)
         dy = random.randint(-1, 1)
         return Coordinates(self.coordinates.x + dx, self.coordinates.y + dy)
