@@ -11,34 +11,96 @@ from generators.item_generator import ItemGenerator
 
 
 class MapBuilderInterface(ABC):
+    """
+    Abstract class representing a builder interface for generating a game map.
+
+    Attributes:
+        room (Room): The game map room that is being built.
+        level (int): The level of the game map being built.
+    """
+
     def __init__(self, level: int = 1):
+        """
+        Initializes a new MapBuilderInterface object.
+
+        Args:
+            level (int): The level of the game map being built. Default is 1.
+        """
         self.room = Room("")
         self.level = level
 
     def set_level(self, level: int):
+        """
+        Sets the level of the game map being built.
+
+        Args:
+            level (int): The level of the game map being built.
+        """
         self.level = level
 
     def reset(self, level: int = 1):
+        """
+        Resets the builder to its initial state.
+
+        Args:
+            level (int): The level of the game map being built. Default is 1.
+        """
         self.room, self.level = Room(""), level
 
     def get_room(self):
+        """
+        Returns the game map room that has been built.
+
+        Returns:
+            Room: The game map room that has been built.
+        """
         return self.room
 
     @abstractmethod
     def generate_map(self, width: int, height: int):
+        """
+        Generates the game map.
+
+        Args:
+            width (int): The width of the game map.
+            height (int): The height of the game map.
+        """
         pass
 
     @abstractmethod
-    def generate_enemies(self, enemies_factor: EnemyFactory):
+    def generate_enemies(self, enemies_factory: EnemyFactory):
+        """
+        Generates the enemies for the game map.
+
+        Args:
+            enemies_factory (EnemyFactory): The factory object used to create the enemies.
+        """
         pass
 
     @abstractmethod
     def generate_items(self, items_generator: ItemGenerator):
+        """
+        Generates the items for the game map.
+
+        Args:
+            items_generator (ItemGenerator): The generator object used to create the items.
+        """
         pass
 
 
 class RandomMapBuilder(MapBuilderInterface):
+    """
+    Concrete builder class that generates a random game map.
+    """
+
     def generate_map(self, width: int, height: int):
+        """
+        Generates a random game map.
+
+        Args:
+            width (int): The width of the game map.
+            height (int): The height of the game map.
+        """
         self.room = Room("")
         game_map = [
             ["#" if random.randint(0, 100) == 0 else " " for _ in range(width)]
@@ -54,52 +116,11 @@ class RandomMapBuilder(MapBuilderInterface):
         self.room.width = width
         self.room.height = height
 
-    def generate_enemies(self, enemies_factor: EnemyFactory):
-        enemies = enemies_factor.create_enemies(self.level, self.room.game_map)
-        self.room.enemies = enemies
+    def generate_enemies(self, enemies_factory: EnemyFactory):
+        """
+        Generates the enemies for the game map.
 
-    def generate_items(self, items_generator: ItemGenerator):
-        items_generator.generate_items(self.level, self.room.game_map)
-
-
-#
-class FinalRoomBuilder(MapBuilderInterface):
-    def generate_map(self, width: int = 0, height: int = 0):
-        with open(f"levels/level_{self.level}.txt", "r") as levels_file:
-            game_map = [list(line.strip()) for line in levels_file.readlines()]
-            game_map = [[get_physical_object(c) for c in row] for row in game_map]
-        self.room = Room("")
-        self.room.game_map = game_map
-        self.room.height = len(game_map)
-        self.room.width = len(game_map[0])
-        self.room.is_finale = True
-
-    def generate_enemies(self, enemies_factor: Optional[EnemyFactory] = None):
-        self.room.enemies = {Dragon(60, 17)}
-
-    def generate_items(self, items_generator: Optional[ItemGenerator] = None):
-        self.room.game_map[20][10] = Sword()
-
-
-class MapDirector:
-    def __init__(self):
-        self.builder = RandomMapBuilder()
-        self.enemy_factory = None
-        self.item_generator = ItemGenerator()
-
-    def set_builder(self, builder: MapBuilderInterface):
-        self.builder = builder
-
-    def set_enemy_factory(self, enemy_factory: EnemyFactory):
-        self.enemy_factory = enemy_factory
-
-    def set_item_generator(self, item_generator: ItemGenerator):
-        self.item_generator = item_generator
-
-    def build_room(self, width: int = 45, height: int = 25) -> Room:
-        self.builder.generate_map(width, height)
-        self.builder.generate_enemies(self.enemy_factory)
-        self.builder.generate_items(self.item_generator)
-        room = self.builder.room
-        self.builder.reset()
-        return room
+        Args:
+            enemies_factory (EnemyFactory): The factory object used to create the enemies.
+        """
+        enemies = enemies_factory.create_en
