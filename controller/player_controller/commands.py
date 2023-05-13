@@ -35,7 +35,6 @@ class PlayerControllerCommand(ABC):
     def _get_movement(self):
         """Gets the movement for the player controller command."""
 
-
     @staticmethod
     def _handle_enemies(game_state: State, next_x: int, next_y: int) -> bool:
         """Handles the player's interaction with an enemy.

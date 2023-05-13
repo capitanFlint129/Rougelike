@@ -17,6 +17,7 @@ class GameEngineCommand(ABC):
     Attributes:
         None
     """
+
     def execute(self, state: State):
         """
         Abstract method to be implemented by the child classes.
@@ -41,6 +42,7 @@ class OpenInventoryCommand(GameEngineCommand):
     Attributes:
         inventory_menu: The inventory menu object to be opened.
     """
+
     def __init__(self, inventory_menu):
         self.inventory_menu = inventory_menu
 
@@ -68,6 +70,7 @@ class OkCommand(GameEngineCommand):
     Attributes:
         None
     """
+
     def execute(self, state: State):
         """
         Does nothing.

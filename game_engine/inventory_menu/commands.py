@@ -6,6 +6,7 @@ class MenuCommand(ABC):
     """
     Base class for all menu commands. All menu commands should inherit from this class.
     """
+
     def execute(self, menu_state: MenuState):
         """
         Executes the command on the given menu state.
@@ -20,6 +21,7 @@ class MenuCommandUp(MenuCommand):
     """
     Command for moving the menu cursor up.
     """
+
     def execute(self, menu_state: MenuState):
         """
         Executes the menu cursor up command on the given menu state.
@@ -34,6 +36,7 @@ class MenuCommandDown(MenuCommand):
     """
     Command for moving the menu cursor down.
     """
+
     def execute(self, menu_state: MenuState):
         """
         Executes the menu cursor down command on the given menu state.
@@ -50,6 +53,7 @@ class MenuCommandApply(MenuCommand):
     """
     Command for applying the selected item in the menu.
     """
+
     def execute(self, menu_state: MenuState):
         """
         Executes the apply item command on the given menu state.
@@ -69,6 +73,7 @@ class MenuCommandClose(MenuCommand):
     """
     Command for closing the menu.
     """
+
     def execute(self, menu_state: MenuState):
         """
         Executes the close menu command on the given menu state.
