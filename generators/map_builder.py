@@ -14,6 +14,7 @@ class MapBuilderInterface(ABC):
     """
     Abstract base class for map builders.
     """
+
     def __init__(self, level: int = 1):
         """
         Initializes a new MapBuilderInterface.
@@ -87,6 +88,7 @@ class RandomMapBuilder(MapBuilderInterface):
     """
     A random map builder.
     """
+
     def generate_map(self, width: int, height: int):
         """
         Generates a random map.
@@ -134,6 +136,7 @@ class FinalRoomBuilder(MapBuilderInterface):
     """
     A final room builder.
     """
+
     def generate_map(self, width: int = 0, height: int = 0):
         """
         Generates the final room map.
@@ -142,6 +145,7 @@ class FinalRoomBuilder(MapBuilderInterface):
             width: The width of the map.
             height: The height of the map.
         """
+
     def generate_map(self, width: int = 0, height: int = 0):
         with open(f"levels/level_{self.level}.txt", "r") as levels_file:
             game_map = [list(line.strip()) for line in levels_file.readlines()]
@@ -169,6 +173,7 @@ class MapDirector:
     enemy_factory (EnemyFactory): The EnemyFactory object that will be used to generate enemies.
     item_generator (ItemGenerator): The ItemGenerator object that will be used to generate items.
     """
+
     def __init__(self):
         self.builder = RandomMapBuilder()
         self.enemy_factory = None
