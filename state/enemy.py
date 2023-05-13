@@ -62,6 +62,7 @@ class CloneableEnemy(Enemy):
     Represents an enemy character that can clone itself with a certain probability.
     Inherits from the Enemy class, and overrides the "update" method to implement the cloning behavior.
     """
+
     def __init__(self, x, y):
         super().__init__(x, y)
         self.cloning_probability = 0.5
