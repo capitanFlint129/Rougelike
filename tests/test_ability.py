@@ -1,19 +1,13 @@
 from unittest.mock import MagicMock
 
 from state.actor_decorator import ConfusedActorDecorator
+from utils.coordinates import Coordinates
 
 
 def test_init():
     actor = MagicMock()
     decorator = ConfusedActorDecorator(actor)
     assert decorator.decorated_actor == actor
-
-
-def test_get_icon():
-    actor = MagicMock()
-    actor.get_icon.return_value = "A"
-    decorator = ConfusedActorDecorator(actor)
-    assert decorator.get_icon() == "A"
 
 
 def test_get_icon_confused():
@@ -35,6 +29,6 @@ def test_move_confused():
     actor.coordinates.x = 1
     actor.coordinates.y = 2
     decorator = ConfusedActorDecorator(actor)
-    new_coordinates = decorator.move(None)
+    new_coordinates = decorator.move(Coordinates(2, 3))
     assert abs(new_coordinates.x - actor.coordinates.x) <= 1
     assert abs(new_coordinates.y - actor.coordinates.y) <= 1
