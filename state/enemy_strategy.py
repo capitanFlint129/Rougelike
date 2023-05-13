@@ -2,6 +2,10 @@ from utils.coordinates import Coordinates
 
 
 class EnemyStrategy:
+    """
+    A base class for implementing enemy strategies in a game.
+    """
+
     def get_next_coordinates(
         self, enemy_coordinates: Coordinates, player_coordinates: Coordinates
     ) -> Coordinates:
@@ -9,6 +13,10 @@ class EnemyStrategy:
 
 
 class AggressiveEnemyStrategy(EnemyStrategy):
+    """
+    A class for implementing aggressive enemy strategy in a game.
+    """
+
     def get_next_coordinates(
         self, enemy_coordinates: Coordinates, player_coordinates: Coordinates
     ) -> Coordinates:
@@ -22,6 +30,10 @@ class AggressiveEnemyStrategy(EnemyStrategy):
 
 
 class PassiveEnemyStrategy(EnemyStrategy):
+    """
+    A class for implementing passive enemy strategy in a game.
+    """
+
     def get_next_coordinates(
         self, enemy_coordinates: Coordinates, player_coordinates: Coordinates
     ) -> Coordinates:
@@ -38,6 +50,10 @@ class PassiveAttackEnemyStrategy(EnemyStrategy):
 
 
 class CowardlyEnemyStrategy(EnemyStrategy):
+    """
+    A class for implementing cowardly enemy strategy in a game.
+    """
+
     def get_next_coordinates(
         self, enemy_coordinates: Coordinates, player_coordinates: Coordinates
     ) -> Coordinates:
@@ -54,13 +70,26 @@ class CowardlyEnemyStrategy(EnemyStrategy):
 
 
 class EnemyMovement:
+    """
+    A class for moving an enemy in a game.
+
+    :Attributes:
+        - `strategy`: An instance of an EnemyStrategy subclass that defines the strategy for enemy movement.
+    """
+
     def __init__(self, strategy=None):
         self.strategy = strategy
 
     def set_strategy(self, strategy: EnemyStrategy):
+        """
+        Sets the strategy for enemy movement
+        """
         self.strategy = strategy
 
     def move(
         self, enemy_coordinates: Coordinates, player_coordinates: Coordinates
     ) -> Coordinates:
+        """
+        Returns the next coordinates of the enemy based on the strategy.
+        """
         return self.strategy.get_next_coordinates(enemy_coordinates, player_coordinates)
