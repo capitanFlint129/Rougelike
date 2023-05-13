@@ -39,9 +39,36 @@ class Enemy(Actor):
 
 
 class CloneableEnemy(Enemy):
+    def __init__(self, x, y):
+        super().__init__(x, y)
+        self.cloning_probability = 0.5
 
-    def clone(self, coordinates):
-        pass
+    def clone(self, coordinates=None):
+        if coordinates is None:
+            coordinates = self.coordinates
+        new_enemy = copy.deepcopy(self)
+        new_enemy.coordinates = coordinates
+        return new_enemy
+
+    def update(self, game_state) -> Coordinates:
+        new_coordinates = super().update(game_state)
+        if random.random() < self.cloning_probability:
+            x, y = self.coordinates
+            available_position = []
+            game_map = game_state.game_map
+            for i in range(-1, 2):
+                for j in range(-1, 2):
+                    if i == j == 0:
+                        continue
+                    if game_map.get_object_at(x + i, y + j).get_icon() == ' ':
+                        available_position.append(Coordinates(x + i, y + j))
+            if available_position:
+                self.cloning_probability = self.cloning_probability * 0.5
+                enemy_copy = self.clone(available_position[random.randint(0, len(available_position)) - 1])
+                game_map.set_object_at(*available_position[random.randint(0, len(available_position)) - 1],
+                                       enemy_copy)
+                game_map.get_enemies().add(enemy_copy)
+        return new_coordinates
 
 
 """
@@ -92,6 +119,26 @@ class ShieldspikeTurtles(Enemy):
         return 1
 
 
+class DemonSword(Enemy):
+    """
+    Looks like sword but has surprise
+    """
+
+    def __init__(self, x=60, y=17):
+        super().__init__(x, y)
+        self.power = 100
+        self.movement_strategy.set_strategy(es.PassiveAttackEnemyStrategy())
+
+    def get_icon(self):
+        return "|"
+
+    def get_name(self):
+        return "Demon Sword"
+
+    def enemy_experience(self) -> int:
+        return 1
+
+
 class PanicPuffs(Enemy):
     """
     Panic Puffs: These round, fluffy creatures are reminiscent of cotton balls and are perpetually nervous.
@@ -110,7 +157,7 @@ class PanicPuffs(Enemy):
         return "Panic Puffs"
 
     def enemy_experience(self) -> int:
-        return 1
+        return 100
 
 
 """
@@ -138,50 +185,26 @@ class CyborgChainsaw(Enemy):
         return 2
 
 
-class LaserShark(CloneableEnemy):
+class PoisonousMold(CloneableEnemy):
     """
-    Laser Shark: An advanced, genetically-engineered shark armed with laser weaponry on its dorsal fin.
-    It aggressively hunts down any intruders in its territory, unleashing devastating energy beams to subdue its prey.
+    PoisonousMold
     """
 
     def __init__(self, x=60, y=17):
         super().__init__(x, y)
-        self.movement_strategy.set_strategy(es.AggressiveEnemyStrategy())
-        self.cloning_probability = 0.05
+        self.health = 100
+        self.power = 1
+        self.movement_strategy.set_strategy(es.PassiveAttackEnemyStrategy())
+        self.cloning_probability = 0.5
 
     def get_icon(self):
         return "L"
 
     def get_name(self):
-        return "Laser Shark"
+        return "Poisonous Mold"
 
     def enemy_experience(self) -> int:
         return 2
-
-    def clone(self, coordinates=None):
-        if coordinates is None:
-            coordinates = self.coordinates
-        new_laser_shark = copy.deepcopy(self)
-        new_laser_shark.coordinates = coordinates
-        return new_laser_shark
-
-    def update(self, game_state) -> Coordinates:
-        new_coordinates = super().update(game_state)
-        if random.random() < self.cloning_probability:
-            x, y = self.coordinates
-            available_position = []
-            game_map = game_state.game_map
-            for i in range(-1, 2):
-                for j in range(-1, 2):
-                    if i == j == 0:
-                        continue
-                    if game_map.get_object_at(x + i, y + j).get_icon() == ' ':
-                        available_position.append(Coordinates(x + i, y + j))
-            if available_position:
-                self.cloning_probability = self.cloning_probability * 0.5
-                copy_laser_shark = self.clone(available_position[random.randint(0, len(available_position)) - 1])
-                game_state.game_map.get_enemies().add(copy_laser_shark)
-        return new_coordinates
 
 
 class BioShields(Enemy):
@@ -222,4 +245,4 @@ class Cryonites(Enemy):
         return "Cautious One"
 
     def enemy_experience(self) -> int:
-        return 1
+        return 100

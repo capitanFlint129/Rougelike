@@ -3,7 +3,6 @@ from typing import List
 from state.actor import Actor
 from state.enemy import Enemy
 import state.ability as abilities
-from utils.coordinates import Coordinates
 
 
 class Hero(Actor):
@@ -14,7 +13,7 @@ class Hero(Actor):
     def __init__(self, x=6, y=3):
         super(Hero, self).__init__(x, y)
         self.experience = 0
-        self.power = 1
+        self.power = 2
         self.abilities: List[abilities.Ability] = []
         self.abilities.append(abilities.ConfuseAbility(self))
 

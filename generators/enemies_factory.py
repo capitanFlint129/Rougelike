@@ -21,7 +21,8 @@ class FantasyEnemyFactory(EnemyFactory):
         enemies_dict = {
             0: Dragon,
             1: ShieldspikeTurtles,
-            2: PanicPuffs
+            2: PanicPuffs,
+            3: DemonSword,
         }
         enemy_type = random.randint(0, len(enemies_dict) - 1)
         return {enemies_dict[enemy_type](x, y)}
@@ -33,7 +34,7 @@ class SciFiEnemyFactory(EnemyFactory):
         y = len(map_array) // 2 - 2
         enemies_dict = {
             0: CyborgChainsaw,
-            1: LaserShark,
+            1: PoisonousMold,
             2: BioShields,
             3: Cryonites
         }

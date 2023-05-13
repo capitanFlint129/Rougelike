@@ -27,6 +27,14 @@ class PassiveEnemyStrategy(EnemyStrategy):
     ) -> Coordinates:
         return enemy_coordinates
 
+class PassiveAttackEnemyStrategy(EnemyStrategy):
+    def get_next_coordinates(
+        self, enemy_coordinates: Coordinates, player_coordinates: Coordinates
+    ) -> Coordinates:
+        if enemy_coordinates.distance(player_coordinates) == 1:
+            return player_coordinates
+        return enemy_coordinates
+
 
 class CowardlyEnemyStrategy(EnemyStrategy):
     def get_next_coordinates(
