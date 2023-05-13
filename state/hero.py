@@ -3,7 +3,6 @@ from typing import List
 from state.actor import Actor
 from state.enemy import Enemy
 import state.ability as abilities
-from state.item import Shield
 
 
 class Hero(Actor):
