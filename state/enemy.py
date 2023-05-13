@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from state.actor import Actor
 from state.item import Item
 from utils.coordinates import Coordinates
-import state.enemy_strategy as es
+import state.enemy_state as es
 import copy
 
 
@@ -16,7 +16,12 @@ class Enemy(Actor):
 
     def __init__(self, x=60, y=17):
         super(Enemy, self).__init__(x, y)
-        self.movement_strategy = es.EnemyMovement()
+        self.wounded_level = self.health // 3
+        self.movement = es.EnemyMovement()
+        self.original_strategy = None
+        self.wounded = False
+        self.wounded_strategy = es.CowardlyEnemyState()
+        self.regeneration = 1
 
     def get_icon(self):
         return "*"
@@ -27,6 +32,13 @@ class Enemy(Actor):
     def equip(self, item: Item):
         pass
 
+    def get_damage(self, damage):
+        super().get_damage(damage)
+        if self.health <= self.wounded_level:
+            self.wounded = True
+            self.original_strategy = self.movement.state
+            self.movement.set_state(self.wounded_strategy)
+
     def get_item(self, item: Item):
         pass
 
@@ -34,8 +46,15 @@ class Enemy(Actor):
         pass
 
     def update(self, game_state) -> Coordinates:
+        self._heal()
         player_coordinates = game_state.hero.coordinates
-        return self.movement_strategy.move(self.coordinates, player_coordinates)
+        return self.movement.move(self.coordinates, player_coordinates)
+
+    def _heal(self):
+        if self.wounded:
+            self.health += self.regeneration
+            if self.health > self.wounded_level:
+                self.movement.set_state(self.original_strategy)
 
 
 class CloneableEnemy(Enemy):
@@ -56,7 +75,7 @@ class Dragon(Enemy):
 
     def __init__(self, x=60, y=17):
         super().__init__(x, y)
-        self.movement_strategy.set_strategy(es.AggressiveEnemyStrategy())
+        self.movement.set_state(es.AggressiveEnemyState())
 
     def get_icon(self):
         return "D"
@@ -79,7 +98,7 @@ class ShieldspikeTurtles(Enemy):
 
     def __init__(self, x=60, y=17):
         super().__init__(x, y)
-        self.movement_strategy.set_strategy(es.PassiveEnemyStrategy())
+        self.movement.set_state(es.PassiveEnemyState())
 
     def get_icon(self):
         return "S"
@@ -100,7 +119,7 @@ class PanicPuffs(Enemy):
 
     def __init__(self, x=60, y=17):
         super().__init__(x, y)
-        self.movement_strategy.set_strategy(es.CowardlyEnemyStrategy())
+        self.movement.set_state(es.CowardlyEnemyState())
 
     def get_icon(self):
         return "P"
@@ -125,7 +144,7 @@ class CyborgChainsaw(Enemy):
 
     def __init__(self, x=60, y=17):
         super().__init__(x, y)
-        self.movement_strategy.set_strategy(es.AggressiveEnemyStrategy())
+        self.movement.set_state(es.AggressiveEnemyState())
 
     def get_icon(self):
         return "W"
@@ -145,7 +164,7 @@ class LaserShark(CloneableEnemy):
 
     def __init__(self, x=60, y=17):
         super().__init__(x, y)
-        self.movement_strategy.set_strategy(es.AggressiveEnemyStrategy())
+        self.movement.set_state(es.AggressiveEnemyState())
         self.cloning_probability = 0.05
 
     def get_icon(self):
@@ -194,7 +213,7 @@ class BioShields(Enemy):
 
     def __init__(self, x=60, y=17):
         super().__init__(x, y)
-        self.movement_strategy.set_strategy(es.PassiveEnemyStrategy())
+        self.movement.set_state(es.PassiveEnemyState())
 
     def get_icon(self):
         return "B"
@@ -214,7 +233,7 @@ class Cryonites(Enemy):
 
     def __init__(self, x=60, y=17):
         super().__init__(x, y)
-        self.movement_strategy.set_strategy(es.CowardlyEnemyStrategy())
+        self.movement.set_state(es.CowardlyEnemyState())
 
     def get_icon(self):
         return "Y"

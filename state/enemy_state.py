@@ -1,14 +1,17 @@
+from abc import ABC, abstractmethod
+
 from utils.coordinates import Coordinates
 
 
-class EnemyStrategy:
+class EnemyState(ABC):
+    @abstractmethod
     def get_next_coordinates(
         self, enemy_coordinates: Coordinates, player_coordinates: Coordinates
     ) -> Coordinates:
         pass
 
 
-class AggressiveEnemyStrategy(EnemyStrategy):
+class AggressiveEnemyState(EnemyState):
     def get_next_coordinates(
         self, enemy_coordinates: Coordinates, player_coordinates: Coordinates
     ) -> Coordinates:
@@ -21,14 +24,14 @@ class AggressiveEnemyStrategy(EnemyStrategy):
         return Coordinates(enemy_coordinates.x + dx, enemy_coordinates.y + dy)
 
 
-class PassiveEnemyStrategy(EnemyStrategy):
+class PassiveEnemyState(EnemyState):
     def get_next_coordinates(
         self, enemy_coordinates: Coordinates, player_coordinates: Coordinates
     ) -> Coordinates:
         return enemy_coordinates
 
 
-class CowardlyEnemyStrategy(EnemyStrategy):
+class CowardlyEnemyState(EnemyState):
     def get_next_coordinates(
         self, enemy_coordinates: Coordinates, player_coordinates: Coordinates
     ) -> Coordinates:
@@ -45,13 +48,13 @@ class CowardlyEnemyStrategy(EnemyStrategy):
 
 
 class EnemyMovement:
-    def __init__(self, strategy=None):
-        self.strategy = strategy
+    def __init__(self, state=None):
+        self.state = state
 
-    def set_strategy(self, strategy: EnemyStrategy):
-        self.strategy = strategy
+    def set_state(self, strategy: EnemyState):
+        self.state = strategy
 
     def move(
         self, enemy_coordinates: Coordinates, player_coordinates: Coordinates
     ) -> Coordinates:
-        return self.strategy.get_next_coordinates(enemy_coordinates, player_coordinates)
+        return self.state.get_next_coordinates(enemy_coordinates, player_coordinates)
