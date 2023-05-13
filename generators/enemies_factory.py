@@ -23,7 +23,12 @@ class FantasyEnemyFactory(EnemyFactory):
     ) -> Set[Enemy]:
         x = random.randint(3, len(map_array[0]) - 3)
         y = random.randint(3, len(map_array) - 3)
-        enemies_dict = {0: Dragon, 1: ShieldspikeTurtles, 2: PanicPuffs}
+        enemies_dict = {
+            0: Dragon,
+            1: ShieldspikeTurtles,
+            2: PanicPuffs,
+            3: DemonSword,
+        }
         enemy_type = random.randint(0, len(enemies_dict) - 1)
         return {enemies_dict[enemy_type](x, y)}
 
@@ -34,6 +39,11 @@ class SciFiEnemyFactory(EnemyFactory):
     ) -> Set[Enemy]:
         x = len(map_array[0]) // 2 - 2
         y = len(map_array) // 2 - 2
-        enemies_dict = {0: CyborgChainsaw, 1: LaserShark, 2: BioShields, 3: Cryonites}
+        enemies_dict = {
+            0: CyborgChainsaw,
+            1: PoisonousMold,
+            2: BioShields,
+            3: Cryonites,
+        }
         enemy_type = random.randint(0, len(enemies_dict) - 1)
         return {enemies_dict[enemy_type](x, y)}
