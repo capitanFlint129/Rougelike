@@ -16,6 +16,7 @@ class MapGenerator:
     The number of rooms generated is based on a curve-fitting formula, which takes the level as input and returns
     a random number of rooms.
     """
+
     _director: MapDirector = MapDirector()
 
     @classmethod
@@ -27,7 +28,11 @@ class MapGenerator:
         n = cls._get_count_rooms(level)
 
         for i in range(1, n):
-            new_room = cls._generate_room(level) if i < n - 1 else cls._generate_final_room(level)
+            new_room = (
+                cls._generate_room(level)
+                if i < n - 1
+                else cls._generate_final_room(level)
+            )
             available_directions = directions - {prev_direction}
             direction = random.choice(list(available_directions))
             current_room.connect(new_room, direction)
@@ -43,7 +48,7 @@ class MapGenerator:
         # points:
         # (1, 5)  (2, 8)  (3, 10) (4, 11) (5, 13)
         # (6, 14) (7, 14) (8, 15) (9, 15) (10, 16)
-        y = int(448.8 * (level ** 0.0102425) - 443)
+        y = int(448.8 * (level**0.0102425) - 443)
         rnd = random.randint(-1, 1)
         return y + rnd
 

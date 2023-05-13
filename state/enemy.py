@@ -60,13 +60,17 @@ class CloneableEnemy(Enemy):
                 for j in range(-1, 2):
                     if i == j == 0:
                         continue
-                    if game_map.get_object_at(x + i, y + j).get_icon() == ' ':
+                    if game_map.get_object_at(x + i, y + j).get_icon() == " ":
                         available_position.append(Coordinates(x + i, y + j))
             if available_position:
                 self.cloning_probability = self.cloning_probability * 0.5
-                enemy_copy = self.clone(available_position[random.randint(0, len(available_position)) - 1])
-                game_map.set_object_at(*available_position[random.randint(0, len(available_position)) - 1],
-                                       enemy_copy)
+                enemy_copy = self.clone(
+                    available_position[random.randint(0, len(available_position)) - 1]
+                )
+                game_map.set_object_at(
+                    *available_position[random.randint(0, len(available_position)) - 1],
+                    enemy_copy
+                )
                 game_map.get_enemies().add(enemy_copy)
         return new_coordinates
 
