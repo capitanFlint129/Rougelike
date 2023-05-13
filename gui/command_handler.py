@@ -2,9 +2,21 @@ from typing import Optional
 
 import keyboard
 
-from controller.player_controller.commands import *
+from controller.player_controller.commands import (
+    PlayerControllerCommandUp,
+    PlayerControllerCommandLeft,
+    PlayerControllerCommandDown,
+    PlayerControllerCommandRight,
+    PlayerControllerCommand,
+)
 from game_engine.commands import GameEngineCommand, OpenInventoryCommand, OkCommand
-from game_engine.inventory_menu.commands import *
+from game_engine.inventory_menu.commands import (
+    MenuCommand,
+    MenuCommandUp,
+    MenuCommandDown,
+    MenuCommandApply,
+    MenuCommandClose,
+)
 
 
 class PlayerControllerCommandHandler:

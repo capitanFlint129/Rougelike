@@ -1,12 +1,7 @@
 import pytest
 from unittest.mock import MagicMock, patch
 from game_engine.game_engine import GameEngine
-from game_engine.commands import OkCommand, OpenInventoryCommand
-from game_engine.inventory_menu.commands import MenuCommandUp, MenuCommandDown
-from state.state import State
-from gui.command_handler import GameEngineCommandHandler
-from gui.console_gui import ConsoleGUI
-from controller.controller import Controller
+from game_engine.commands import OkCommand
 
 
 @pytest.fixture

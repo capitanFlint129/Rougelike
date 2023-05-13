@@ -18,9 +18,9 @@ class Enemy(Actor):
         super(Enemy, self).__init__(x, y)
         self.wounded_level = self.health // 3
         self.movement = es.EnemyMovement()
-        self.original_strategy = None
+        self.original_state = None
         self.wounded = False
-        self.wounded_strategy = es.CowardlyEnemyState()
+        self.wounded_state = es.CowardlyEnemyState()
         self.regeneration = 1
 
     def get_icon(self):
@@ -36,8 +36,8 @@ class Enemy(Actor):
         super().get_damage(damage)
         if self.health <= self.wounded_level:
             self.wounded = True
-            self.original_strategy = self.movement.state
-            self.movement.set_state(self.wounded_strategy)
+            self.original_state = self.movement.state
+            self.movement.set_state(self.wounded_state)
 
     def get_item(self, item: Item):
         pass
@@ -54,7 +54,7 @@ class Enemy(Actor):
         if self.wounded:
             self.health += self.regeneration
             if self.health > self.wounded_level:
-                self.movement.set_state(self.original_strategy)
+                self.movement.set_state(self.original_state)
 
 
 class CloneableEnemy(Enemy):

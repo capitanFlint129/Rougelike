@@ -8,20 +8,6 @@ from state.item import Item
 from state.state import State
 
 
-class PlayerControllerCommandsFactory:
-    def create_command_up(self):
-        return PlayerControllerCommandUp()
-
-    def create_command_down(self):
-        return PlayerControllerCommandDown()
-
-    def create_command_left(self):
-        return PlayerControllerCommandLeft()
-
-    def create_command_right(self):
-        return PlayerControllerCommandRight()
-
-
 class PlayerControllerCommand(ABC):
     def execute(self, state: State):
         next_x, next_y = self._get_next_coordinates(state.hero.coordinates)
