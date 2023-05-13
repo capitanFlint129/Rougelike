@@ -39,11 +39,22 @@ class Enemy(Actor):
 
 
 class CloneableEnemy(Enemy):
+    """
+    Represents an enemy character that can clone itself with a certain probability.
+    Inherits from the Enemy class, and overrides the "update" method to implement the cloning behavior.
+    """
     def __init__(self, x, y):
         super().__init__(x, y)
         self.cloning_probability = 0.5
 
     def clone(self, coordinates=None):
+        """
+        Clones the enemy and returns a new instance with the same state as the original, but at the given coordinates.
+        If no coordinates are given, the clone will appear at the original enemy's location.
+
+        :param coordinates: The coordinates where the clone will appear. Defaults to the original enemy's location.
+        :return: A new CloneableEnemy instance with the same state as the original.
+        """
         if coordinates is None:
             coordinates = self.coordinates
         new_enemy = copy.deepcopy(self)
@@ -51,6 +62,15 @@ class CloneableEnemy(Enemy):
         return new_enemy
 
     def update(self, game_state) -> Coordinates:
+        """
+        Updates the state of the enemy for the current game state, and returns its new coordinates.
+
+        If the enemy's cloning probability is high enough, it will create a new clone at a random adjacent position
+        on the game map, with half the original probability of cloning.
+
+        :param game_state: The current game state.
+        :return: The new coordinates of the enemy after the update.
+        """
         new_coordinates = super().update(game_state)
         if random.random() < self.cloning_probability:
             x, y = self.coordinates
