@@ -44,12 +44,12 @@ def test_fill_room_from_file():
 
 
 def test_enemy_generator_generate_enemies():
-    random.randint = MagicMock(return_value=5)
+    random.randint = MagicMock(return_value=2)
     enemies = EnemyGenerator.generate_enemies(level=1, map_array=[[0] * 10] * 10)
     assert len(enemies) == 1
     enemy = next(iter(enemies))
-    assert enemy.get_x() == 5
-    assert enemy.get_y() == 5
+    assert enemy.get_x() == 2
+    assert enemy.get_y() == 2
 
 
 def test_item_generator_generate_items():
