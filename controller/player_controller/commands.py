@@ -10,6 +10,7 @@ from state.state import State
 
 class PlayerControllerCommand(ABC):
     """An abstract base class for player controller commands."""
+
     def execute(self, state: State):
         """Executes the player controller command.
         Args:
@@ -57,7 +58,7 @@ class PlayerControllerCommand(ABC):
 
     @staticmethod
     def _handle_map_objects(
-            game_state: State, next_x: int, next_y: int, next_cell: GameObject
+        game_state: State, next_x: int, next_y: int, next_cell: GameObject
     ) -> None:
         """
         Handles the player's interaction with a game object.
