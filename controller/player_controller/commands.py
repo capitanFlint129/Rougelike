@@ -9,17 +9,18 @@ from state.state import State
 
 
 class PlayerControllerCommand(ABC):
-    def execute(self, state: State):
-        next_x, next_y = self._get_next_coordinates(state.hero.coordinates)
-        next_cell = state.game_map.get_object_at(next_x, next_y)
+    """An abstract base class for player controller commands."""
 
-        enemy_attacked = self._handle_enemies(state, next_x, next_y)
-        if not enemy_attacked and state.hero.coordinates != (next_x, next_y):
-            self._handle_map_objects(state, next_x, next_y, next_cell)
+    @abstractmethod
+    def execute(self, state: State):
+        """Executes the player controller command.
+
+        Args:
+            state (State): The current state of the game.
+        """
 
     def _get_next_coordinates(self, coordinates) -> Tuple:
-        """
-        Determines the next coordinates based on the user input.
+        """Determines the next coordinates based on the user input.
 
         Args:
             coordinates (Coordinates): The current coordinates of the player character.
@@ -32,17 +33,20 @@ class PlayerControllerCommand(ABC):
 
     @abstractmethod
     def _get_movement(self):
-        pass
+        """Gets the movement for the player controller command."""
+
 
     @staticmethod
     def _handle_enemies(game_state: State, next_x: int, next_y: int) -> bool:
-        """
-        Handles the player's interaction with an enemy.
+        """Handles the player's interaction with an enemy.
 
         Args:
             game_state (State): The current state of the game.
             next_x (int): The x-coordinate of the next cell.
             next_y (int): The y-coordinate of the next cell.
+
+        Returns:
+            bool: True if the player attacked an enemy, False otherwise.
         """
         for enemy in game_state.game_map.get_enemies():
             if enemy.coordinates == (next_x, next_y):
@@ -54,8 +58,7 @@ class PlayerControllerCommand(ABC):
     def _handle_map_objects(
         game_state: State, next_x: int, next_y: int, next_cell: GameObject
     ) -> None:
-        """
-        Handles the player's interaction with a game object.
+        """Handles the player's interaction with a game object.
 
         Args:
             game_state (State): The current state of the game.
@@ -80,20 +83,50 @@ class PlayerControllerCommand(ABC):
 
 
 class PlayerControllerCommandUp(PlayerControllerCommand):
+    """A player controller command to move the player character up."""
+
     def _get_movement(self):
+        """Gets the movement for moving up.
+
+        Returns:
+            Tuple[int, int]: The movement in the x and y direction.
+        """
         return -1, 0
 
 
 class PlayerControllerCommandDown(PlayerControllerCommand):
+    """A player controller command to move the player character down."""
+
     def _get_movement(self):
+        """Gets the movement for moving down.
+
+        Returns:
+            Tuple[int, int]: The movement in the x and y direction.
+        """
         return 1, 0
 
 
 class PlayerControllerCommandLeft(PlayerControllerCommand):
+    """A command that moves the player character left by one cell."""
+
     def _get_movement(self):
+        """
+        Determines the movement vector for moving the player character left.
+
+        Return:
+            Tuple[int, int]: The movement vector.
+        """
         return 0, -1
 
 
 class PlayerControllerCommandRight(PlayerControllerCommand):
+    """A command that moves the player character right by one cell."""
+
     def _get_movement(self):
+        """
+        Determines the movement vector for moving the player character right.
+
+        Return:
+            Tuple[int, int]: The movement vector.
+        """
         return 0, 1
