@@ -30,6 +30,6 @@ def test_move_confused():
     actor.coordinates.y = 2
     random.randint = MagicMock(return_value=1)
     decorator = ConfusedActorDecorator(actor)
-    new_coordinates = decorator.move(None)
+    new_coordinates = decorator.update(None)
     assert abs(new_coordinates.x - actor.coordinates.x) <= 1
     assert abs(new_coordinates.y - actor.coordinates.y) <= 1
