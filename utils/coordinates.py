@@ -1,4 +1,12 @@
 class Coordinates:
+    """
+    A class to represent coordinates in 2D space.
+
+    Attributes:
+        x (int): The x-coordinate of the point.
+        y (int): The y-coordinate of the point.
+    """
+
     def __init__(self, x=0, y=0):
         self.x = x
         self.y = y
@@ -18,6 +26,19 @@ class Coordinates:
         yield self.y
 
     def distance(self, other):
+        """
+        Calculates the Euclidean distance between this point and another point.
+
+        Args:
+            other (Coordinates): The other point.
+
+        Returns:
+            float: The distance between this point and the other point.
+
+        Raises:
+            ValueError: If the argument is not of type Coordinates.
+
+        """
         if not isinstance(other, Coordinates):
             raise ValueError("Argument must be of type Coordinates.")
         x_diff = self.x - other.x

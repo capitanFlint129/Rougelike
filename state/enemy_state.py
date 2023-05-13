@@ -4,6 +4,10 @@ from utils.coordinates import Coordinates
 
 
 class EnemyState(ABC):
+    """
+    A base class for implementing enemy strategies in a game.
+    """
+
     @abstractmethod
     def get_next_coordinates(
             self, enemy_coordinates: Coordinates, player_coordinates: Coordinates
@@ -12,6 +16,10 @@ class EnemyState(ABC):
 
 
 class AggressiveEnemyState(EnemyState):
+    """
+    A class for implementing aggressive enemy strategy in a game.
+    """
+
     def get_next_coordinates(
             self, enemy_coordinates: Coordinates, player_coordinates: Coordinates
     ) -> Coordinates:
@@ -25,6 +33,10 @@ class AggressiveEnemyState(EnemyState):
 
 
 class PassiveEnemyState(EnemyState):
+    """
+    A class for implementing passive enemy strategy in a game.
+    """
+
     def get_next_coordinates(
             self, enemy_coordinates: Coordinates, player_coordinates: Coordinates
     ) -> Coordinates:
@@ -32,6 +44,11 @@ class PassiveEnemyState(EnemyState):
 
 
 class PassiveAttackEnemyState(EnemyState):
+    """
+    A class for implementing the passive strategy of the
+    enemy, with attacks on neighboring cells
+    """
+
     def get_next_coordinates(
             self, enemy_coordinates: Coordinates, player_coordinates: Coordinates
     ) -> Coordinates:
@@ -41,6 +58,10 @@ class PassiveAttackEnemyState(EnemyState):
 
 
 class CowardlyEnemyState(EnemyState):
+    """
+    A class for implementing cowardly enemy strategy in a game.
+    """
+
     def get_next_coordinates(
             self, enemy_coordinates: Coordinates, player_coordinates: Coordinates
     ) -> Coordinates:
@@ -57,13 +78,25 @@ class CowardlyEnemyState(EnemyState):
 
 
 class EnemyMovement:
+    """
+    A class for moving an enemy in a game.
+
+    :Attributes:
+        - `strategy`: An instance of an EnemyStrategy subclass that defines the strategy for enemy movement.
+    """
     def __init__(self, state=None):
         self.state = state
 
     def set_state(self, strategy: EnemyState):
+        """
+        Sets the strategy for enemy movement
+        """
         self.state = strategy
 
     def move(
             self, enemy_coordinates: Coordinates, player_coordinates: Coordinates
     ) -> Coordinates:
+        """
+        Returns the next coordinates of the enemy based on the strategy.
+        """
         return self.state.get_next_coordinates(enemy_coordinates, player_coordinates)

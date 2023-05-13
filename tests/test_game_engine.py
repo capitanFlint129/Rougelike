@@ -38,7 +38,7 @@ def test_game_engine_run_game_over(
     with patch("time.sleep", return_value=None):
         game_engine.run()
 
-    mock_gui.show_game_over_message.assert_called_once_with(mock_state)
+    mock_gui.show_game_over_message.assert_called_once_with(mock_state.score)
     mock_command_handler.get_command.assert_called()
 
 
