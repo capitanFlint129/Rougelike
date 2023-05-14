@@ -1,0 +1,151 @@
+@startuml
+skinparam style strictuml
+
+ConsoleGui  <-- GameEngine
+
+class ConsoleGui {
++updateDisplay()
++printInventory()
+}
+
+class CommandsHandler {
++getCommand()
+}
+
+class GameEngine {
++run()
+}
+
+
+GameEngine --> "<<interface>>\nController"
+GameEngine -> CommandsHandler
+GameEngine --> State
+
+
+abstract class GameObject {
++getIcon()
++getName()
+}
+
+EnemyController ..> GameObject
+PlayerController ..> GameObject
+WorldController ..> GameObject
+
+GameObject <|-- Actor
+GameObject <|-- Item
+abstract class Item {
+}
+
+
+
+Item <|-- Sword
+class Sword {
+}
+Item <|-- Shield
+class Shield {
+}
+
+'abstract class GameObject {
+'}
+
+abstract class Actor {
+-attack
+-health
+-inventory : Items[0..*]
++attack(actor)
++getItem(item: Item)
++equip(item: Item)
++getDamage(damage)
++getX()
++setX(x)
++getY()
++setY(y)
+}
+
+
+'"<<interface>>\nController"
+interface "<<interface>>\nController" {
++updateState(State)
+}
+
+"<<interface>>\nController" <|.. EnemyController
+EnemyController ..> State
+EnemyController ...> Enemy
+class EnemyController {
+}
+
+"<<interface>>\nController" <|.. WorldController
+WorldController ..> State
+'WorldController ..> Item
+class WorldController {
+}
+
+"<<interface>>\nController" <|.. PlayerController
+PlayerController ..> State
+PlayerController ..> Hero
+PlayerController ..> Enemy
+class PlayerController {
+}
+CommandsHandler <- PlayerController
+
+
+GameEngine -> InventoryMenu
+InventoryMenu ..> Actor
+InventoryMenu --> CommandsHandler
+InventoryMenu ..> ConsoleGui
+ConsoleGui ...> GameObject
+class InventoryMenu {
++open()
+}
+
+
+Actor <|-- Hero
+class Hero {
+}
+
+
+Actor <|-- Enemy
+abstract class Enemy {
+}
+
+class State {
++hero : Hero
++lives : Integer
++score : Integer
++currentLevel: Integer
+}
+State --> GameMap
+
+
+
+WorldController ..> MapGenerator
+
+class ItemGenerator {
++generateItems()
+}
+ItemGenerator ..> Item
+
+class EnemyGenerator {
++generateEnemies()
+}
+EnemyGenerator ..> Enemy
+class MapGenerator {
++generateRoom()
+}
+MapGenerator --> EnemyGenerator
+MapGenerator --> ItemGenerator
+
+class GameMap {
++changeRoom(direction):
++getEnemies():
++getObjectAt(x, y):
++setObjectAt(x, y, obj:GameObject):
+}
+GameMap --> Room
+
+class Room {
++connect(room, direction)
++addDoors(door:GameObject)
+}
+
+@enduml

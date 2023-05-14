@@ -1,0 +1,76 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+
+skinparam style strictuml
+actor User
+participant ConsoleGui
+participant CommandsHandler
+participant GameEngine
+participant PlayerController
+participant Hero
+participant EnemiesController
+participant Enemy
+participant WorldController
+participant State
+
+activate User
+User -> GameEngine : start game
+activate GameEngine
+User ->> CommandsHandler : command
+activate CommandsHandler
+deactivate CommandsHandler
+
+GameEngine -> CommandsHandler : get command
+activate CommandsHandler
+'GameEngine <<- CommandsHandler
+deactivate CommandsHandler
+
+GameEngine -> PlayerController : updateState
+activate PlayerController
+PlayerController -> CommandsHandler : get command
+activate CommandsHandler
+'CommandsHandler ->> PlayerController
+deactivate CommandsHandler
+
+PlayerController -> State : get attacked enemy
+activate State
+deactivate State
+PlayerController -> Hero : attack enemy
+activate Hero
+Hero -> Enemy : apply damage
+activate Enemy
+deactivate Hero
+deactivate Enemy
+deactivate PlayerController
+
+GameEngine -> EnemiesController : updateState
+activate EnemiesController
+EnemiesController -> State : get player position
+activate State
+deactivate State
+loop for each enemy
+EnemiesController -> Enemy : update enemy position
+activate Enemy
+deactivate Enemy
+EnemiesController -> State : update enemy position
+activate State
+deactivate State
+EnemiesController -> State : remove dead enemies
+activate State
+deactivate State
+end
+
+GameEngine -> WorldController : updateState
+activate WorldController
+WorldController -> WorldController : checking that player\nhas activated the door
+
+GameEngine -> ConsoleGui : updateDisplay()
+activate ConsoleGui
+ConsoleGui -> User
+
+
+
+
+
+@enduml
