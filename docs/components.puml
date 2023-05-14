@@ -1,0 +1,77 @@
+@startuml
+skin rose
+
+'title RogueLike Game - Component Diagram
+/'
+Define components
+'/
+[Game\nEngine] as GE
+
+component GUI {
+port " " as p_gui
+port " " as p_commands
+[ConsoleGui]
+[CommandHandler]
+
+portout " " as p_gui_out
+portout " " as p_commands_out
+portout " " as p_gui_state
+
+[ConsoleGui] - p_gui
+[ConsoleGui] - p_gui_state
+[ConsoleGui] - p_gui_out
+[CommandHandler] - p_commands
+[CommandHandler] - p_commands_out
+
+
+}
+
+
+component "Controller" as Controller {
+port " " as p_controller
+port " " as p_controller_player
+portout " " as p_controller_level_gen
+[PlayerController]
+[PlayerController] - p_controller_player
+[EnemyController]
+[WorldController]
+}
+
+component "State" as SF {
+port "  " as p_state
+[State]
+[GameMap]
+[GameObject]
+}
+[MapGenerator] as MG
+
+/'
+===================================
+'/
+GE ..> " "
+p_gui_state ..> " "
+" " <.. p_controller
+p_gui_out <.. GE
+p_commands_out <.. GE
+"update state" -- p_controller
+GE ..> "update state"
+"generate level" -- MG
+p_controller_level_gen -- WorldController
+p_controller_level_gen <.. "generate level"
+State - p_state
+" " -- p_state
+
+[State] ..> [GameMap]
+[State] ..> [GameObject]
+[GameMap] .> [GameObject]
+
+[PlayerController] - p_controller
+[EnemyController] - p_controller
+[WorldController] - p_controller
+p_controller_player ..> p_commands_out
+
+
+
+Console <.. p_gui
+Keyboard <.. p_commands
+@enduml

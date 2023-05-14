@@ -1,0 +1,104 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+
+skinparam style strictuml
+actor User
+participant ConsoleGui
+participant CommandsHandler
+participant GameEngine
+participant PlayerController
+participant Hero
+participant EnemiesController
+participant Ability
+participant Enemy
+participant EnemyStrategy
+participant WorldController
+participant State
+participant EventHandler
+
+
+activate User
+User -> GameEngine : start game
+activate GameEngine
+User ->> CommandsHandler : command
+activate CommandsHandler
+deactivate CommandsHandler
+
+GameEngine -> CommandsHandler : get command
+activate CommandsHandler
+'GameEngine <<- CommandsHandler
+deactivate CommandsHandler
+
+GameEngine -> PlayerController : updateState
+activate PlayerController
+PlayerController -> CommandsHandler : get command
+activate CommandsHandler
+'CommandsHandler ->> PlayerController
+deactivate CommandsHandler
+
+PlayerController -> State : get attacked enemy
+activate State
+deactivate State
+PlayerController -> Hero : attack enemy
+activate Hero
+Hero -> Enemy : apply damage
+activate Enemy
+deactivate Enemy
+loop for each ability
+    Hero -> Ability
+    activate Ability
+    Ability -> Enemy : spell ability
+    activate Enemy
+    deactivate Enemy
+    deactivate Ability
+end
+deactivate Hero
+PlayerController -> Enemy : get enemy experience
+activate Enemy
+deactivate Enemy
+PlayerController -> Hero : get experience
+activate Hero
+deactivate Hero
+deactivate PlayerController
+
+GameEngine -> EnemiesController : updateState
+activate EnemiesController
+EnemiesController -> State : get player position
+activate State
+deactivate State
+loop for each enemy
+    EnemiesController -> Enemy : get move
+    activate Enemy
+    Enemy -> EnemyStrategy
+    activate EnemyStrategy
+    deactivate EnemyStrategy
+    deactivate Enemy
+    EnemiesController -> Enemy : update position
+    activate Enemy
+    deactivate Enemy
+    EnemiesController -> State : update position
+    activate State
+    deactivate State
+end
+EnemiesController -> State : remove dead enemies
+activate State
+deactivate State
+deactivate EnemiesController
+
+GameEngine -> WorldController : updateState
+activate WorldController
+WorldController -> WorldController : checking that player\nhas activated the door
+WorldController -> EventHandler : update
+activate EventHandler
+deactivate EventHandler
+
+GameEngine -> ConsoleGui : updateDisplay()
+activate ConsoleGui
+ConsoleGui -> User
+
+
+
+
+
+@enduml

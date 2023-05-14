@@ -1,0 +1,276 @@
+@startuml
+skinparam style strictuml
+
+ConsoleGui  <-- GameEngine
+
+class ConsoleGui {
++updateDisplay()
++printInventory()
+}
+
+class CommandsHandler {
++getCommand()
+}
+
+class GameEngine {
++run()
+}
+
+
+GameEngine --> "<<interface>>\nController"
+GameEngine -> CommandsHandler
+GameEngine --> State
+
+
+abstract class GameObject {
++getIcon()
++getName()
+}
+
+EnemyController ..> GameObject
+PlayerController ..> GameObject
+WorldController ..> GameObject
+
+GameObject <|-- Actor
+GameObject <|-- Item
+abstract class Item {
+}
+
+
+
+Item <|-- Sword
+class Sword {
+}
+Item <|-- Shield
+class Shield {
+}
+
+'abstract class GameObject {
+'}
+
+abstract class Actor {
+-attack
+-health
+-inventory : Items[0..*]
++attack(actor)
++getItem(item: Item)
++equip(item: Item)
++getDamage(damage)
++getX()
++setX(x)
++getY()
++setY(y)
++update(state)
+}
+
+
+'"<<interface>>\nController"
+interface "<<interface>>\nController" {
++updateState(State)
+}
+
+"<<interface>>\nController" <|.. EnemyController
+EnemyController ..> State
+EnemyController ...> Enemy
+class EnemyController {
+}
+
+"<<interface>>\nController" <|.. WorldController
+WorldController ..> State
+'WorldController ..> Item
+class WorldController {
+}
+
+"<<interface>>\nController" <|.. PlayerController
+PlayerController ..> State
+PlayerController ..> Hero
+PlayerController ..> Enemy
+class PlayerController {
+}
+CommandsHandler <- PlayerController
+
+
+GameEngine -> InventoryMenu
+InventoryMenu ..> Actor
+InventoryMenu --> CommandsHandler
+InventoryMenu ..> ConsoleGui
+ConsoleGui ...> GameObject
+class InventoryMenu {
++open()
+}
+
+
+Actor <|-- Hero
+class Hero {
++getExperience(exp)
+}
+
+
+Actor <|-- Enemy
+abstract class Enemy {
++enemyExperience()
+}
+
+class State {
++hero : Hero
++lives : Integer
++score : Integer
++currentLevel: Integer
+}
+State --> GameMap
+
+
+
+WorldController ..> MapGenerator
+
+'class ItemGenerator {
+'+generateItems()
+'}
+'ItemGenerator ..> Item
+
+'class EnemyGenerator {
+'+generateEnemies()
+'}
+'EnemyGenerator ..> Enemy
+class MapGenerator {
++generateNewMap()
+}
+MapGenerator ..> GameMap
+'MapGenerator --> EnemyGenerator
+'MapGenerator --> ItemGenerator
+
+class GameMap {
++changeRoom(direction):
++getEnemies():
++getObjectAt(x, y):
++setObjectAt(x, y, obj:GameObject):
+}
+GameMap --> Room
+
+class Room {
++connect(room, direction)
++addDoors(door:GameObject)
+}
+
+State <.. Actor
+
+abstract class EnemyStrategy {
++getNextCoordinates(enemyCoordinates,\n playerCoordinates)
+}
+
+EnemyStrategy <|-- AggressiveEnemyStrategy
+EnemyStrategy <|-- PassiveEnemyStrategy
+EnemyStrategy <|-- CowardlyEnemyStrategy
+EnemyStrategy <|-- PassiveAttackEnemyStrategy
+
+class AggressiveEnemyStrategy {
+}
+class PassiveEnemyStrategy {
+}
+class CowardlyEnemyStrategy {
+}
+class PassiveAttackEnemyStrategy {
+}
+
+class EnemyMovement {
++move(enemyCoordinates,\n playerCoordinates)
+}
+
+EnemyMovement --> EnemyStrategy
+Enemy --> EnemyMovement
+
+
+abstract class ActorDecorator {
++getDecoratedActor()
+}
+
+class ConfusedActorDecorator {
+}
+
+ Actor <|-- ActorDecorator
+ ActorDecorator <|-- ConfusedActorDecorator
+
+
+Actor --> Ability
+abstract class Ability {
++spellAbility(target)
+}
+
+class ConfuseAbility {
+}
+Event <.. ConfuseAbility
+EventHandler <.. ConfuseAbility
+
+Event <.. WorldController
+EventHandler <.. WorldController
+
+
+Ability <|-- ConfuseAbility
+
+class Event {
+-callback
++execute()
+}
+
+EventHandler --> Event
+class EventHandler {
++addEvent(event)
++removeEvent(event)
++update()
++clearEvents()
+}
+
+class EnemyFactory {
++createEnemies()
+}
+EnemyFactory ..> Enemy
+EnemyFactory ..> CloneableEnemy
+
+
+EnemyFactory <|-- FantasyEnemyFactory
+EnemyFactory <|-- SciFiEnemyFactory
+
+class FantasyEnemyFactory {
+}
+
+class SciFiEnemyFactory {
+}
+
+
+MapGenerator ..> AbstractMapBuilder
+Room <-- AbstractMapBuilder
+AbstractMapBuilder --> EnemyFactory
+AbstractMapBuilder --> ItemGenerator
+abstract class AbstractMapBuilder {
++setLevel(level)
++reset(level)
++getRoom()
++generateMap(width, height)
++generateEnemies(factory)
++generateItems(itemsGenerator)
+}
+
+AbstractMapBuilder <|-- RandomMapBuilder
+class RandomMapBuilder {
+}
+AbstractMapBuilder <|-- FinalRoomBuilder
+class FinalRoomBuilder {
+}
+
+
+MapGenerator --> MapDirector
+class MapDirector {
+-builder : AbstractMapBuilder
+-enemyFactory : EnemyFactory
+-itemGenerator : ItemGenerator
++buildRoom(width, height)
+}
+MapDirector ..> Room
+
+Enemy <|-- CloneableEnemy
+abstract class CloneableEnemy {
+-cloningProbability
++clone()
+}
+
+@enduml
