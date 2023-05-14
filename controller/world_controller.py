@@ -2,6 +2,7 @@ import state.physical_object as po
 from controller.controller import Controller
 from generators.map_generator import MapGenerator
 from state.state import State
+from events.event_handler import EventHandler
 
 
 class WorldController(Controller):
@@ -20,6 +21,7 @@ class WorldController(Controller):
             game_state.lives -= 1
             game_state.hero.resurrect_player()
             self.new_level(game_state)
+            EventHandler.clear_events()
             return
 
         x, y = game_state.hero.get_x(), game_state.hero.get_y()
@@ -29,8 +31,11 @@ class WorldController(Controller):
             current_cell, po.ExitPortal
         ):
             self.handle_level_completion(game_state)
+            EventHandler.clear_events()
         elif isinstance(current_cell, po.Door):
             self.handle_door_transition(game_state, x, y)
+            EventHandler.clear_events()
+        EventHandler.update()
 
     def handle_level_completion(self, game_state):
         """

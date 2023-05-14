@@ -31,8 +31,8 @@ class PlayerController(Controller):
         next_x, next_y = self._get_next_coordinates(game_state.hero.coordinates)
         next_cell = game_state.game_map.get_object_at(next_x, next_y)
 
-        self._handle_enemies(game_state, next_x, next_y)
-        if game_state.hero.coordinates != (next_x, next_y):
+        enemy_attacked = self._handle_enemies(game_state, next_x, next_y)
+        if not enemy_attacked and game_state.hero.coordinates != (next_x, next_y):
             self._handle_map_objects(game_state, next_x, next_y, next_cell)
 
     def _get_next_coordinates(self, coordinates) -> Tuple:
@@ -59,7 +59,7 @@ class PlayerController(Controller):
         return coordinates.x, coordinates.y
 
     @staticmethod
-    def _handle_enemies(game_state: State, next_x: int, next_y: int) -> None:
+    def _handle_enemies(game_state: State, next_x: int, next_y: int) -> bool:
         """
         Handles the player's interaction with an enemy.
 
@@ -71,7 +71,8 @@ class PlayerController(Controller):
         for enemy in game_state.game_map.get_enemies():
             if enemy.coordinates == (next_x, next_y):
                 game_state.hero.attack(enemy)
-                return
+                return True
+        return False
 
     @staticmethod
     def _handle_map_objects(

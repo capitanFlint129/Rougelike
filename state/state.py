@@ -1,4 +1,3 @@
-from state.hero import Hero
 from state.game_map import GameMap, Room
 
 
@@ -15,9 +14,9 @@ class State:
         current_level (int): The current level of the game.
     """
 
-    def __init__(self, hero: Hero):
+    def __init__(self, hero):
         self.game_map: GameMap = GameMap(Room("0"), 1)
-        self.hero: Hero = hero
+        self.hero = hero
         self.lives = 5
         self.score = 0
         self.room_changed = False

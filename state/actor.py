@@ -24,8 +24,12 @@ class Actor(GameObject, ABC):
         self.coordinates = Coordinates(x, y)
 
     def attack(self, actor: "Actor"):
-        power = self.power + sum([item.attack_bonus() for item in self.equipped])
+        power = self.get_power_attack()
         actor.get_damage(power)
+
+    def get_power_attack(self):
+        power = self.power + sum([item.attack_bonus() for item in self.equipped])
+        return power
 
     def get_item(self, item: Item):
         self.inventory.add(item)
@@ -61,3 +65,6 @@ class Actor(GameObject, ABC):
     def move_to(self, x, y):
         self.coordinates.x = x
         self.coordinates.y = y
+
+    def move(self, game_state) -> Coordinates:
+        return self.coordinates

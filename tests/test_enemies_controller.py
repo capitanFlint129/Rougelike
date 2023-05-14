@@ -32,6 +32,7 @@ def test_enemies_controller_update_state_no_player_near(mock_game_state, mock_en
 
     for enemy in mock_enemies:
         enemy.coordinates = Coordinates(1, 1)
+        enemy.move.return_value = Coordinates(1, 2)
 
     enemies_controller = EnemiesController()
     enemies_controller.update_state(mock_game_state)
@@ -46,6 +47,7 @@ def test_enemies_controller_update_state_player_near(mock_game_state, mock_enemi
 
     for enemy in mock_enemies:
         enemy.coordinates = Coordinates(4, 5)
+        enemy.move.return_value = Coordinates(5, 5)
 
     enemies_controller = EnemiesController()
     enemies_controller.update_state(mock_game_state)
