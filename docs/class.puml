@@ -224,6 +224,7 @@ class EnemyFactory {
 +createEnemies()
 }
 EnemyFactory ..> Enemy
+EnemyFactory ..> CloneableEnemy
 
 
 EnemyFactory <|-- FantasyEnemyFactory
@@ -265,5 +266,11 @@ class MapDirector {
 +buildRoom(width, height)
 }
 MapDirector ..> Room
+
+Enemy <|-- CloneableEnemy
+abstract class CloneableEnemy {
+-cloningProbability
++clone()
+}
 
 @enduml
