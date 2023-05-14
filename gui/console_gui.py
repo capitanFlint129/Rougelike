@@ -25,7 +25,9 @@ class ConsoleGUI:
         echo(self.term.move_yx(12, 13) + f"~Your score is {score}. Press e to exit~")
         echo(self.term.move_yx(13, 13) + "~" * (33 + len(str(score))))
 
-    def print_inventory(self, state, items_list, user_position):
+    def print_inventory(self, menu_state):
+        user_position = menu_state.user_position
+        items_list = menu_state.items_list
         self.clear_inventory()
         view_start = user_position - user_position % self.items_in_menu
         view_end = min(view_start + self.items_in_menu, len(items_list))
@@ -33,22 +35,22 @@ class ConsoleGUI:
             echo(self.term.move_yx(24, 39) + "Inventory: 0")
         else:
             echo(self.term.move_yx(24, 39) + f"Inventory: {view_start + 1}-{view_end}")
-        for i in range(0, view_end - view_start):
-            current_position = view_start + i
-            item_string = self._get_item_string_for_menu(
-                state, items_list[current_position]
-            )[: self.menu_slot_width]
-            if current_position == user_position:
-                item_string = self.term.black_on_snow(item_string)
-            echo(self.term.move_yx(25 + i, 39) + item_string)
+            for i in range(0, view_end - view_start):
+                current_position = view_start + i
+                item_string = self._get_item_string_for_menu(
+                    menu_state, items_list[current_position]
+                )[: self.menu_slot_width]
+                if current_position == user_position:
+                    item_string = self.term.black_on_snow(item_string)
+                echo(self.term.move_yx(25 + i, 39) + item_string)
 
     def clear_inventory(self):
         for i in range(self.items_in_menu + 1):
             echo(self.term.move_yx(24 + i, 39) + " " * self.menu_slot_width)
 
     @staticmethod
-    def _get_item_string_for_menu(state, item):
-        if item in state.hero.equipped:
+    def _get_item_string_for_menu(menu_state, item):
+        if item in menu_state.equipped:
             return "[x] " + item.get_name()
         return "[ ] " + item.get_name()
 

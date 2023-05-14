@@ -1,0 +1,53 @@
+@startuml
+skinparam style strictuml
+
+PlayerController ..> State
+PlayerController ..> PlayerControllerCommand
+class PlayerController {
++updateState(state)
+}
+
+class State {
++hero : Hero
++lives : Integer
++score : Integer
++currentLevel: Integer
++gameMap: GameMap
+}
+
+
+PlayerController --> PlayerControllerCommandsHandler
+
+class PlayerControllerCommandsHandler {
++getCommand()
+}
+
+PlayerControllerCommandsHandler ..> PlayerControllerCommand
+
+PlayerControllerCommand ..> State
+abstract class PlayerControllerCommand{
++execute(state)
+}
+
+class PlayerControllerCommandUp{
++execute(state)
+}
+
+class PlayerControllerCommandDown{
++execute(state)
+}
+
+class PlayerControllerCommandLeft{
++execute(state)
+}
+
+class PlayerControllerCommandRight{
++execute(state)
+}
+
+PlayerControllerCommand <|-- PlayerControllerCommandUp
+PlayerControllerCommand <|-- PlayerControllerCommandDown
+PlayerControllerCommand <|-- PlayerControllerCommandLeft
+PlayerControllerCommand <|-- PlayerControllerCommandRight
+
+@enduml

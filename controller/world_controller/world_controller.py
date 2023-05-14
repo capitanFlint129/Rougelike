@@ -1,8 +1,8 @@
 import state.physical_object as po
 from controller.controller import Controller
+from events.event_handler import EventHandler
 from generators.map_generator import MapGenerator
 from state.state import State
-from events.event_handler import EventHandler
 
 
 class WorldController(Controller):

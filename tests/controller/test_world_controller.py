@@ -1,6 +1,6 @@
 import pytest
 from unittest.mock import MagicMock
-from controller.world_controller import WorldController
+from controller import WorldController
 from state.hero import Hero
 import state.physical_object as po
 from utils.coordinates import Coordinates

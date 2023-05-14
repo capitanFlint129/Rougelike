@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from state.actor import Actor
 from state.item import Item
 from utils.coordinates import Coordinates
-import state.enemy_strategy as es
+import state.enemy_state as es
 import copy
 
 
@@ -16,7 +16,12 @@ class Enemy(Actor):
 
     def __init__(self, x=60, y=17):
         super(Enemy, self).__init__(x, y)
-        self.movement_strategy = es.EnemyMovement()
+        self.wounded_level = self.health // 3
+        self.movement = es.EnemyMovement()
+        self.original_state = None
+        self.wounded = False
+        self.wounded_state = es.CowardlyEnemyState()
+        self.regeneration = 1
 
     def get_icon(self):
         return "*"
@@ -27,6 +32,13 @@ class Enemy(Actor):
     def equip(self, item: Item):
         pass
 
+    def get_damage(self, damage):
+        super().get_damage(damage)
+        if self.health <= self.wounded_level:
+            self.wounded = True
+            self.original_state = self.movement.state
+            self.movement.set_state(self.wounded_state)
+
     def get_item(self, item: Item):
         pass
 
@@ -34,8 +46,15 @@ class Enemy(Actor):
         pass
 
     def update(self, game_state) -> Coordinates:
+        self._heal()
         player_coordinates = game_state.hero.coordinates
-        return self.movement_strategy.move(self.coordinates, player_coordinates)
+        return self.movement.move(self.coordinates, player_coordinates)
+
+    def _heal(self):
+        if self.wounded:
+            self.health += self.regeneration
+            if self.health > self.wounded_level:
+                self.movement.set_state(self.original_state)
 
 
 class CloneableEnemy(Enemy):
@@ -109,7 +128,7 @@ class Dragon(Enemy):
 
     def __init__(self, x=60, y=17):
         super().__init__(x, y)
-        self.movement_strategy.set_strategy(es.AggressiveEnemyStrategy())
+        self.movement.set_state(es.AggressiveEnemyState())
 
     def get_icon(self):
         return "D"
@@ -132,7 +151,7 @@ class ShieldspikeTurtles(Enemy):
 
     def __init__(self, x=60, y=17):
         super().__init__(x, y)
-        self.movement_strategy.set_strategy(es.PassiveEnemyStrategy())
+        self.movement.set_state(es.PassiveEnemyState())
 
     def get_icon(self):
         return "S"
@@ -152,7 +171,7 @@ class DemonSword(Enemy):
     def __init__(self, x=60, y=17):
         super().__init__(x, y)
         self.power = 100
-        self.movement_strategy.set_strategy(es.PassiveAttackEnemyStrategy())
+        self.movement.set_state(es.PassiveAttackEnemyState())
 
     def get_icon(self):
         return "|"
@@ -173,7 +192,7 @@ class PanicPuffs(Enemy):
 
     def __init__(self, x=60, y=17):
         super().__init__(x, y)
-        self.movement_strategy.set_strategy(es.CowardlyEnemyStrategy())
+        self.movement.set_state(es.CowardlyEnemyState())
 
     def get_icon(self):
         return "P"
@@ -198,7 +217,7 @@ class CyborgChainsaw(Enemy):
 
     def __init__(self, x=60, y=17):
         super().__init__(x, y)
-        self.movement_strategy.set_strategy(es.AggressiveEnemyStrategy())
+        self.movement.set_state(es.AggressiveEnemyState())
 
     def get_icon(self):
         return "W"
@@ -219,7 +238,7 @@ class PoisonousMold(CloneableEnemy):
         super().__init__(x, y)
         self.health = 100
         self.power = 1
-        self.movement_strategy.set_strategy(es.PassiveAttackEnemyStrategy())
+        self.movement.set_state(es.PassiveAttackEnemyState())
         self.cloning_probability = 0.5
 
     def get_icon(self):
@@ -231,6 +250,33 @@ class PoisonousMold(CloneableEnemy):
     def enemy_experience(self) -> int:
         return 2
 
+    def clone(self, coordinates=None):
+        if coordinates is None:
+            coordinates = self.coordinates
+        new_laser_shark = copy.deepcopy(self)
+        new_laser_shark.coordinates = coordinates
+        return new_laser_shark
+
+    def update(self, game_state) -> Coordinates:
+        new_coordinates = super().update(game_state)
+        if random.random() < self.cloning_probability:
+            x, y = self.coordinates
+            available_position = []
+            game_map = game_state.game_map
+            for i in range(-1, 2):
+                for j in range(-1, 2):
+                    if i == j == 0:
+                        continue
+                    if game_map.get_object_at(x + i, y + j).get_icon() == " ":
+                        available_position.append(Coordinates(x + i, y + j))
+            if available_position:
+                self.cloning_probability = self.cloning_probability * 0.5
+                copy_laser_shark = self.clone(
+                    available_position[random.randint(0, len(available_position)) - 1]
+                )
+                game_state.game_map.get_enemies().add(copy_laser_shark)
+        return new_coordinates
+
 
 class BioShields(Enemy):
     """
@@ -241,7 +287,7 @@ class BioShields(Enemy):
 
     def __init__(self, x=60, y=17):
         super().__init__(x, y)
-        self.movement_strategy.set_strategy(es.PassiveEnemyStrategy())
+        self.movement.set_state(es.PassiveEnemyState())
 
     def get_icon(self):
         return "B"
@@ -261,7 +307,7 @@ class Cryonites(Enemy):
 
     def __init__(self, x=60, y=17):
         super().__init__(x, y)
-        self.movement_strategy.set_strategy(es.CowardlyEnemyStrategy())
+        self.movement.set_state(es.CowardlyEnemyState())
 
     def get_icon(self):
         return "Y"

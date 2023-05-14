@@ -1,24 +1,29 @@
-from enum import Enum
+from typing import Optional
 
 import keyboard
 
+from controller.player_controller.commands import (
+    PlayerControllerCommandUp,
+    PlayerControllerCommandLeft,
+    PlayerControllerCommandDown,
+    PlayerControllerCommandRight,
+    PlayerControllerCommand,
+)
+from game_engine.commands import (
+    GameEngineCommand,
+    GameEngineCommandOpenInventory,
+    GameEngineCommandOk,
+)
+from game_engine.inventory_menu.commands import (
+    MenuCommand,
+    MenuCommandUp,
+    MenuCommandDown,
+    MenuCommandApply,
+    MenuCommandClose,
+)
 
-class UserCommand(Enum):
-    """
-    An enumeration that defines all possible user commands in the game, including movement and menu commands.
-    """
 
-    # Movement
-    UP = 1
-    DOWN = 2
-    LEFT = 3
-    RIGHT = 4
-    # Menu
-    OPEN_INVENTORY = 5
-    APPLY = 6
-
-
-class CommandHandler:
+class PlayerControllerCommandHandler:
     """
     A class that handles user commands in the game.
 
@@ -26,17 +31,55 @@ class CommandHandler:
         get_command: Returns the user command based on the currently pressed keyboard keys.
     """
 
-    @staticmethod
-    def get_command() -> UserCommand:
+    def get_command(self) -> Optional[PlayerControllerCommand]:
         if keyboard.is_pressed("w"):
-            return UserCommand.UP
+            return PlayerControllerCommandUp()
         elif keyboard.is_pressed("s"):
-            return UserCommand.DOWN
+            return PlayerControllerCommandDown()
         elif keyboard.is_pressed("a"):
-            return UserCommand.LEFT
+            return PlayerControllerCommandLeft()
         elif keyboard.is_pressed("d"):
-            return UserCommand.RIGHT
-        elif keyboard.is_pressed("i"):
-            return UserCommand.OPEN_INVENTORY
+            return PlayerControllerCommandRight()
+        return None
+
+
+class GameEngineCommandHandler:
+    """
+    A class that handles user commands in the game.
+
+    Methods:
+        get_command: Returns the user command based on the currently pressed keyboard keys.
+    """
+
+    def __init__(
+        self,
+        inventory_menu,
+    ):
+        self.inventory_menu = inventory_menu
+
+    def get_command(self) -> Optional[GameEngineCommand]:
+        if keyboard.is_pressed("i"):
+            return GameEngineCommandOpenInventory(self.inventory_menu)
         elif keyboard.is_pressed("e"):
-            return UserCommand.APPLY
+            return GameEngineCommandOk()
+        return None
+
+
+class InventoryMenuCommandHandler:
+    """
+    A class that handles user commands in the game.
+
+    Methods:
+        get_command: Returns the user command based on the currently pressed keyboard keys.
+    """
+
+    def get_command(self) -> Optional[MenuCommand]:
+        if keyboard.is_pressed("w"):
+            return MenuCommandUp()
+        elif keyboard.is_pressed("s"):
+            return MenuCommandDown()
+        elif keyboard.is_pressed("e"):
+            return MenuCommandApply()
+        elif keyboard.is_pressed("i"):
+            return MenuCommandClose()
+        return None
