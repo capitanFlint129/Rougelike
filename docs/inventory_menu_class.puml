@@ -1,0 +1,76 @@
+@startuml
+skinparam style strictuml
+
+class MenuState {
++hero: Hero
++itemsList : Item[0..*]
++userPosition
++equipped : Item[0..*]
+}
+
+
+class ConsoleGui {
++updateDisplay()
++printInventory()
+}
+
+
+abstract class Actor {
+-attack
+-health
+-inventory : Items[0..*]
++attack(actor)
++getItem(item: Item)
++equip(item: Item)
++getDamage(damage)
++getX()
++setX(x)
++getY()
++setY(y)
++update(state)
+}
+
+
+
+InventoryMenu ..> Actor
+InventoryMenu ..> MenuCommand
+InventoryMenu ..> ConsoleGui
+InventoryMenu ..> InventoryMenuCommandsHandler
+InventoryMenu --> MenuState
+class InventoryMenu {
++open()
+}
+
+class InventoryMenuCommandsHandler {
++getCommand()
+}
+
+InventoryMenuCommandsHandler ..> MenuCommand
+
+MenuCommand ..> MenuState
+class MenuCommand{
++execute(menuState)
+}
+
+class MenuCommandUp{
++execute(menuState)
+}
+
+class MenuCommandDown{
++execute(menuState)
+}
+class MenuCommandApply{
++execute(menuState)
+}
+class MenuCommandClose{
++execute(menuState)
+}
+
+MenuCommand <|-- MenuCommandUp
+MenuCommand <|-- MenuCommandDown
+MenuCommand <|-- MenuCommandApply
+MenuCommand <|-- MenuCommandClose
+
+
+
+@enduml

@@ -9,7 +9,11 @@ from controller.player_controller.commands import (
     PlayerControllerCommandRight,
     PlayerControllerCommand,
 )
-from game_engine.commands import GameEngineCommand, OpenInventoryCommand, OkCommand
+from game_engine.commands import (
+    GameEngineCommand,
+    GameEngineCommandOpenInventory,
+    GameEngineCommandOk,
+)
 from game_engine.inventory_menu.commands import (
     MenuCommand,
     MenuCommandUp,
@@ -55,9 +59,9 @@ class GameEngineCommandHandler:
 
     def get_command(self) -> Optional[GameEngineCommand]:
         if keyboard.is_pressed("i"):
-            return OpenInventoryCommand(self.inventory_menu)
+            return GameEngineCommandOpenInventory(self.inventory_menu)
         elif keyboard.is_pressed("e"):
-            return OkCommand()
+            return GameEngineCommandOk()
         return None
 
 

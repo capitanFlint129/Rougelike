@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import MagicMock, patch
 from game_engine.game_engine import GameEngine
-from game_engine.commands import OkCommand
+from game_engine.commands import GameEngineCommandOk
 
 
 @pytest.fixture
@@ -36,7 +36,7 @@ def test_game_engine_run_game_over(
     game_engine = GameEngine(
         mock_state, mock_controllers, mock_command_handler, mock_gui
     )
-    mock_command_handler.get_command.side_effect = [None, OkCommand()]
+    mock_command_handler.get_command.side_effect = [None, GameEngineCommandOk()]
     with patch("time.sleep", return_value=None):
         game_engine.run()
 

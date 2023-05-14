@@ -5,9 +5,11 @@
 skinparam style strictuml
 actor User
 participant ConsoleGui
-participant CommandsHandler
+participant GameEngineCommandsHandler
 participant GameEngine
 participant PlayerController
+participant PlayerControllerCommandsHandler
+participant PlayerControllerCommandUp
 participant Hero
 participant EnemiesController
 participant Ability
@@ -21,29 +23,37 @@ participant EventHandler
 activate User
 User -> GameEngine : start game
 activate GameEngine
-User ->> CommandsHandler : command
-activate CommandsHandler
-deactivate CommandsHandler
+User ->> GameEngineCommandsHandler : command
+activate GameEngineCommandsHandler
+deactivate GameEngineCommandsHandler
+User ->> PlayerControllerCommandsHandler : command
+activate PlayerControllerCommandsHandler
+deactivate PlayerControllerCommandsHandler
 
-GameEngine -> CommandsHandler : get command
-activate CommandsHandler
-'GameEngine <<- CommandsHandler
-deactivate CommandsHandler
+GameEngine -> GameEngineCommandsHandler : get command
+activate GameEngineCommandsHandler
+'GameEngine <<- GameEngineCommandsHandler
+deactivate GameEngineCommandsHandler
 
 GameEngine -> PlayerController : updateState
 activate PlayerController
-PlayerController -> CommandsHandler : get command
-activate CommandsHandler
-'CommandsHandler ->> PlayerController
-deactivate CommandsHandler
+PlayerController -> PlayerControllerCommandsHandler : get command
+activate PlayerControllerCommandsHandler
+'GameEngineCommandsHandler ->> PlayerController
+deactivate PlayerControllerCommandsHandler
+PlayerController -> PlayerControllerCommandUp : execute
+activate PlayerControllerCommandUp
 
-PlayerController -> State : get attacked enemy
+PlayerControllerCommandUp -> State : get attacked enemy
 activate State
 deactivate State
-PlayerController -> Hero : attack enemy
+PlayerControllerCommandUp -> Hero : attack enemy
 activate Hero
 Hero -> Enemy : apply damage
 activate Enemy
+Enemy -> Enemy : check health
+activate Enemy
+deactivate Enemy
 deactivate Enemy
 loop for each ability
     Hero -> Ability
@@ -54,12 +64,13 @@ loop for each ability
     deactivate Ability
 end
 deactivate Hero
-PlayerController -> Enemy : get enemy experience
+PlayerControllerCommandUp -> Enemy : get enemy experience
 activate Enemy
 deactivate Enemy
-PlayerController -> Hero : get experience
+PlayerControllerCommandUp -> Hero : get experience
 activate Hero
 deactivate Hero
+deactivate PlayerControllerCommandUp
 deactivate PlayerController
 
 GameEngine -> EnemiesController : updateState

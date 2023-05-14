@@ -1,0 +1,49 @@
+@startuml
+skinparam style strictuml
+
+class GameEngine {
+-inventoryMenu : InventoryMenu
+-controllers : Controller[0..*]
+-consoleGui : ConsoleGui
++run()
+}
+
+
+GameEngine --> State
+
+class State {
++hero : Hero
++lives : Integer
++score : Integer
++currentLevel: Integer
++gameMap: GameMap
+}
+
+
+GameEngine --> GameEngineCommandsHandler
+GameEngine ..> GameEngineCommand
+class GameEngineCommandsHandler {
++getCommand()
+}
+
+GameEngineCommandsHandler ..> GameEngineCommand
+
+GameEngineCommand ..> State
+class GameEngineCommand{
++execute(state)
+}
+
+class GameEngineCommandOpenInventory{
+-inventoryMenu : InventoryMenu
++execute(state)
+}
+
+class GameEngineCommandOk{
++execute(state)
+}
+
+GameEngineCommand <|-- GameEngineCommandOpenInventory
+GameEngineCommand <|-- GameEngineCommandOk
+
+
+@enduml

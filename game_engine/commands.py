@@ -28,7 +28,7 @@ class GameEngineCommand(ABC):
         pass
 
 
-class OpenInventoryCommand(GameEngineCommand):
+class GameEngineCommandOpenInventory(GameEngineCommand):
     """
     A game engine command to open the inventory menu.
 
@@ -57,7 +57,7 @@ class OpenInventoryCommand(GameEngineCommand):
             self.inventory_menu.open()
 
 
-class OkCommand(GameEngineCommand):
+class GameEngineCommandOk(GameEngineCommand):
     """
     A game engine command that does nothing.
 

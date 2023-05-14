@@ -8,17 +8,12 @@ class ConsoleGui {
 +printInventory()
 }
 
-class CommandsHandler {
-+getCommand()
-}
-
 class GameEngine {
 +run()
 }
 
 
 GameEngine --> "<<interface>>\nController"
-GameEngine -> CommandsHandler
 GameEngine --> State
 
 
@@ -87,12 +82,10 @@ PlayerController ..> Hero
 PlayerController ..> Enemy
 class PlayerController {
 }
-CommandsHandler <- PlayerController
 
 
 GameEngine -> InventoryMenu
 InventoryMenu ..> Actor
-InventoryMenu --> CommandsHandler
 InventoryMenu ..> ConsoleGui
 ConsoleGui ...> GameObject
 class InventoryMenu {
@@ -108,6 +101,8 @@ class Hero {
 
 Actor <|-- Enemy
 abstract class Enemy {
+-woundedState : EnemyState
+-originalState : EnemyState
 +enemyExperience()
 }
 
@@ -154,29 +149,29 @@ class Room {
 
 State <.. Actor
 
-abstract class EnemyStrategy {
+abstract class EnemyState {
 +getNextCoordinates(enemyCoordinates,\n playerCoordinates)
 }
 
-EnemyStrategy <|-- AggressiveEnemyStrategy
-EnemyStrategy <|-- PassiveEnemyStrategy
-EnemyStrategy <|-- CowardlyEnemyStrategy
-EnemyStrategy <|-- PassiveAttackEnemyStrategy
+EnemyState <|-- AggressiveEnemyState
+EnemyState <|-- PassiveEnemyState
+EnemyState <|-- CowardlyEnemyState
+EnemyState <|-- PassiveAttackEnemyState
 
-class AggressiveEnemyStrategy {
+class AggressiveEnemyState {
 }
-class PassiveEnemyStrategy {
+class PassiveEnemyState {
 }
-class CowardlyEnemyStrategy {
+class CowardlyEnemyState {
 }
-class PassiveAttackEnemyStrategy {
+class PassiveAttackEnemyState {
 }
 
 class EnemyMovement {
 +move(enemyCoordinates,\n playerCoordinates)
 }
 
-EnemyMovement --> EnemyStrategy
+EnemyMovement --> EnemyState
 Enemy --> EnemyMovement
 
 
