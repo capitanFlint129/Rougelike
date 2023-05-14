@@ -60,7 +60,7 @@ abstract class Actor {
 +setX(x)
 +getY()
 +setY(y)
-+move(state)
++update(state)
 }
 
 
@@ -123,20 +123,21 @@ State --> GameMap
 
 WorldController ..> MapGenerator
 
-class ItemGenerator {
-+generateItems()
-}
-ItemGenerator ..> Item
+'class ItemGenerator {
+'+generateItems()
+'}
+'ItemGenerator ..> Item
 
-class EnemyGenerator {
-+generateEnemies()
-}
-EnemyGenerator ..> Enemy
+'class EnemyGenerator {
+'+generateEnemies()
+'}
+'EnemyGenerator ..> Enemy
 class MapGenerator {
-+generateRoom()
++generateNewMap()
 }
-MapGenerator --> EnemyGenerator
-MapGenerator --> ItemGenerator
+MapGenerator ..> GameMap
+'MapGenerator --> EnemyGenerator
+'MapGenerator --> ItemGenerator
 
 class GameMap {
 +changeRoom(direction):
@@ -160,12 +161,15 @@ abstract class EnemyStrategy {
 EnemyStrategy <|-- AggressiveEnemyStrategy
 EnemyStrategy <|-- PassiveEnemyStrategy
 EnemyStrategy <|-- CowardlyEnemyStrategy
+EnemyStrategy <|-- PassiveAttackEnemyStrategy
 
 class AggressiveEnemyStrategy {
 }
 class PassiveEnemyStrategy {
 }
 class CowardlyEnemyStrategy {
+}
+class PassiveAttackEnemyStrategy {
 }
 
 class EnemyMovement {
@@ -215,5 +219,51 @@ class EventHandler {
 +update()
 +clearEvents()
 }
+
+class EnemyFactory {
++createEnemies()
+}
+EnemyFactory ..> Enemy
+
+
+EnemyFactory <|-- FantasyEnemyFactory
+EnemyFactory <|-- SciFiEnemyFactory
+
+class FantasyEnemyFactory {
+}
+
+class SciFiEnemyFactory {
+}
+
+
+MapGenerator ..> AbstractMapBuilder
+Room <-- AbstractMapBuilder
+AbstractMapBuilder --> EnemyFactory
+AbstractMapBuilder --> ItemGenerator
+abstract class AbstractMapBuilder {
++setLevel(level)
++reset(level)
++getRoom()
++generateMap(width, height)
++generateEnemies(factory)
++generateItems(itemsGenerator)
+}
+
+AbstractMapBuilder <|-- RandomMapBuilder
+class RandomMapBuilder {
+}
+AbstractMapBuilder <|-- FinalRoomBuilder
+class FinalRoomBuilder {
+}
+
+
+MapGenerator --> MapDirector
+class MapDirector {
+-builder : AbstractMapBuilder
+-enemyFactory : EnemyFactory
+-itemGenerator : ItemGenerator
++buildRoom(width, height)
+}
+MapDirector ..> Room
 
 @enduml
