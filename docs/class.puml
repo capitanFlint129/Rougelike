@@ -60,6 +60,7 @@ abstract class Actor {
 +setX(x)
 +getY()
 +setY(y)
++move(state)
 }
 
 
@@ -101,11 +102,13 @@ class InventoryMenu {
 
 Actor <|-- Hero
 class Hero {
++getExperience(exp)
 }
 
 
 Actor <|-- Enemy
 abstract class Enemy {
++enemyExperience()
 }
 
 class State {
@@ -146,6 +149,71 @@ GameMap --> Room
 class Room {
 +connect(room, direction)
 +addDoors(door:GameObject)
+}
+
+State <.. Actor
+
+abstract class EnemyStrategy {
++getNextCoordinates(enemyCoordinates,\n playerCoordinates)
+}
+
+EnemyStrategy <|-- AggressiveEnemyStrategy
+EnemyStrategy <|-- PassiveEnemyStrategy
+EnemyStrategy <|-- CowardlyEnemyStrategy
+
+class AggressiveEnemyStrategy {
+}
+class PassiveEnemyStrategy {
+}
+class CowardlyEnemyStrategy {
+}
+
+class EnemyMovement {
++move(enemyCoordinates,\n playerCoordinates)
+}
+
+EnemyMovement --> EnemyStrategy
+Enemy --> EnemyMovement
+
+
+abstract class ActorDecorator {
++getDecoratedActor()
+}
+
+class ConfusedActorDecorator {
+}
+
+ Actor <|-- ActorDecorator
+ ActorDecorator <|-- ConfusedActorDecorator
+
+
+Actor --> Ability
+abstract class Ability {
++spellAbility(target)
+}
+
+class ConfuseAbility {
+}
+Event <.. ConfuseAbility
+EventHandler <.. ConfuseAbility
+
+Event <.. WorldController
+EventHandler <.. WorldController
+
+
+Ability <|-- ConfuseAbility
+
+class Event {
+-callback
++execute()
+}
+
+EventHandler --> Event
+class EventHandler {
++addEvent(event)
++removeEvent(event)
++update()
++clearEvents()
 }
 
 @enduml

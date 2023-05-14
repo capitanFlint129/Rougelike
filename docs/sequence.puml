@@ -10,9 +10,13 @@ participant GameEngine
 participant PlayerController
 participant Hero
 participant EnemiesController
+participant Ability
 participant Enemy
+participant EnemyStrategy
 participant WorldController
 participant State
+participant EventHandler
+
 
 activate User
 User -> GameEngine : start game
@@ -40,8 +44,22 @@ PlayerController -> Hero : attack enemy
 activate Hero
 Hero -> Enemy : apply damage
 activate Enemy
-deactivate Hero
 deactivate Enemy
+loop for each ability
+    Hero -> Ability
+    activate Ability
+    Ability -> Enemy : spell ability
+    activate Enemy
+    deactivate Enemy
+    deactivate Ability
+end
+deactivate Hero
+PlayerController -> Enemy : get enemy experience
+activate Enemy
+deactivate Enemy
+PlayerController -> Hero : get experience
+activate Hero
+deactivate Hero
 deactivate PlayerController
 
 GameEngine -> EnemiesController : updateState
@@ -50,20 +68,30 @@ EnemiesController -> State : get player position
 activate State
 deactivate State
 loop for each enemy
-EnemiesController -> Enemy : update enemy position
-activate Enemy
-deactivate Enemy
-EnemiesController -> State : update enemy position
-activate State
-deactivate State
+    EnemiesController -> Enemy : get move
+    activate Enemy
+    Enemy -> EnemyStrategy
+    activate EnemyStrategy
+    deactivate EnemyStrategy
+    deactivate Enemy
+    EnemiesController -> Enemy : update position
+    activate Enemy
+    deactivate Enemy
+    EnemiesController -> State : update position
+    activate State
+    deactivate State
+end
 EnemiesController -> State : remove dead enemies
 activate State
 deactivate State
-end
+deactivate EnemiesController
 
 GameEngine -> WorldController : updateState
 activate WorldController
 WorldController -> WorldController : checking that player\nhas activated the door
+WorldController -> EventHandler : update
+activate EventHandler
+deactivate EventHandler
 
 GameEngine -> ConsoleGui : updateDisplay()
 activate ConsoleGui
