@@ -58,26 +58,38 @@ class WorldController(Controller):
             x (int): The x-coordinate of the door.
             y (int): The y-coordinate of the door.
         """
-        height = game_state.game_map.get_height()
-        width = game_state.game_map.get_width()
+
+        # TODO: Simplify ?
         player = game_state.hero
         game_map = game_state.game_map
+
         if x == 0:
-            game_map.change_room("left")
-            player.move_to(width - 3, player.get_y())
+            room_direction = "left"
         elif y == 0:
-            game_map.change_room("top")
-            player.move_to(player.get_x(), height - 3)
-        elif y == height - 1:
-            game_map.change_room("bottom")
-            player.move_to(player.get_x(), 3)
+            room_direction = "top"
+        elif y == game_map.get_height() - 1:
+            room_direction = "bottom"
         else:
-            game_map.change_room("right")
-            player.move_to(3, player.get_y())
+            room_direction = "right"
+
+        game_map.change_room(room_direction)
+
+        new_height = game_map.get_height()
+        new_width = game_map.get_width()
+
+        if room_direction == "left":
+            player_x, player_y = new_width - 3, new_height // 2
+        elif room_direction == "top":
+            player_x, player_y = new_width // 2, new_height - 3
+        elif room_direction == "bottom":
+            player_x, player_y = new_width // 2, 3
+        else:  # room_direction == "right":
+            player_x, player_y = 3, new_height // 2
 
         if game_map.current_room_is_finale():
-            player.move_to(6, 3)
+            player_x, player_y = 6, 3
 
+        player.move_to(player_x, player_y)
         game_state.room_changed = True
 
     @staticmethod

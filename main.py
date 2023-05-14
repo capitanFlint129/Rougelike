@@ -5,7 +5,7 @@ from controller.player_controller import PlayerController
 from controller.world_controller import WorldController
 from game_engine.game_engine import GameEngine
 from gui.command_handler import CommandHandler
-from gui.console_gui import ConsoleGui
+from gui.console_gui import ConsoleGUI
 from state.hero import Hero
 from state.state import State
 
@@ -14,7 +14,7 @@ if __name__ == "__main__":
     with term.cbreak(), term.fullscreen(), term.hidden_cursor():
         hero = Hero()
         game_state = State(hero)
-        gui = ConsoleGui(term)
+        gui = ConsoleGUI(term)
         commands_handler = CommandHandler()
         player_controller = PlayerController(commands_handler)
         enemies_controller = EnemiesController()

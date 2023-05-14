@@ -40,6 +40,20 @@ class PassiveEnemyStrategy(EnemyStrategy):
         return enemy_coordinates
 
 
+class PassiveAttackEnemyStrategy(EnemyStrategy):
+    """
+    A class for implementing the passive strategy of the
+    enemy, with attacks on neighboring cells
+    """
+
+    def get_next_coordinates(
+        self, enemy_coordinates: Coordinates, player_coordinates: Coordinates
+    ) -> Coordinates:
+        if enemy_coordinates.distance(player_coordinates) == 1:
+            return player_coordinates
+        return enemy_coordinates
+
+
 class CowardlyEnemyStrategy(EnemyStrategy):
     """
     A class for implementing cowardly enemy strategy in a game.

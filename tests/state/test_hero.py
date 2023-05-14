@@ -7,6 +7,7 @@ from state.hero import Hero
 
 def test_hero_attack_actor():
     hero = Hero()
+    hero.power = 1
     actor = Enemy(1, 1)
     hero.attack(actor)
     assert actor.health == 9

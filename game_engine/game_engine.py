@@ -3,7 +3,7 @@ from functools import partial
 
 from controller.controller import Controller
 from gui.command_handler import CommandHandler, UserCommand
-from gui.console_gui import ConsoleGui
+from gui.console_gui import ConsoleGUI
 from state.state import State
 from game_engine.inventory_menu import InventoryMenu
 
@@ -21,7 +21,7 @@ class GameEngine:
         state: State,
         controllers: [Controller],
         command_handler: CommandHandler,
-        gui: ConsoleGui,
+        gui: ConsoleGUI,
     ):
         """
         Initializes the GameEngine instance.
@@ -49,7 +49,7 @@ class GameEngine:
             else:
                 self._run_game_step()
             if self.state.lives == 0:
-                self.gui.show_game_over_message(self.state)
+                self.gui.show_game_over_message(self.state.score)
                 while self.command_handler.get_command() != UserCommand.APPLY:
                     time.sleep(0.1)
                 return

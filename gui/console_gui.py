@@ -6,7 +6,7 @@ echo = partial(print, end="", flush=True)
 echo("")
 
 
-class ConsoleGui:
+class ConsoleGUI:
     """
     This is a class that handles the console graphical user interface of the game.
     It includes methods for showing game over messages, displaying inventory items, handling changes between rooms,
@@ -20,13 +20,10 @@ class ConsoleGui:
         self.items_in_menu = 3
         self.menu_slot_width = 30
 
-    def show_game_over_message(self, state):
-        echo(self.term.move_yx(11, 13) + "~" * (33 + len(str(state.score))))
-        echo(
-            self.term.move_yx(12, 13)
-            + f"~Your score is {state.score}. Press e to exit~"
-        )
-        echo(self.term.move_yx(13, 13) + "~" * (33 + len(str(state.score))))
+    def show_game_over_message(self, score):
+        echo(self.term.move_yx(11, 13) + "~" * (33 + len(str(score))))
+        echo(self.term.move_yx(12, 13) + f"~Your score is {score}. Press e to exit~")
+        echo(self.term.move_yx(13, 13) + "~" * (33 + len(str(score))))
 
     def print_inventory(self, state, items_list, user_position):
         self.clear_inventory()

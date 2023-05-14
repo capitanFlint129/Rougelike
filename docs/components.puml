@@ -43,12 +43,8 @@ port "  " as p_state
 [GameMap]
 [GameObject]
 }
-component "LevelGeneration" as LG {
-    port " " as p_level_gen
-  [MapGenerator] as MG
-  [EnemyGenerator] as OG
-  [ItemGenerator] AS IG
-}
+[MapGenerator] as MG
+
 /'
 ===================================
 '/
@@ -59,7 +55,7 @@ p_gui_out <.. GE
 p_commands_out <.. GE
 "update state" -- p_controller
 GE ..> "update state"
-"generate level" -- p_level_gen
+"generate level" -- MG
 p_controller_level_gen -- WorldController
 p_controller_level_gen <.. "generate level"
 State - p_state
@@ -75,9 +71,6 @@ State - p_state
 p_controller_player ..> p_commands_out
 
 
-MG - p_level_gen
-OG <. MG
-MG .> IG
 
 Console <.. p_gui
 Keyboard <.. p_commands
